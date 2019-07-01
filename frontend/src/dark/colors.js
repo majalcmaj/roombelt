@@ -8,8 +8,8 @@ export default {
     medium: "#333333",
     light: "#424242"
   },
-  success: "#54BB84",
-  error: "#FF3665",
+  success: "#00b634",
+  error: "#cd0010",
   warning: '#ff984c',
-  info: '#4680bb'
+  info: '#0171b0'
 };

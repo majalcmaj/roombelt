@@ -27,15 +27,19 @@ class Router extends React.PureComponent {
     }
 
     if (!this.state.isConfirmedOnline) {
-      return <FatalError title={i18next.t("errors.unable-to-connect-server")}
-                         message={i18next.t("errors.check-internet-and-try-again")}/>;
+      return (
+        <FatalError
+          title={i18next.t("errors.unable-to-connect-server")}
+          message={i18next.t("errors.check-internet-and-try-again")}
+        />
+      );
     }
 
     return (
       <Switch>
-        <Route exact path={"/device/:sessionToken?"} component={DeviceApp}/>
-        <Route exact path={"/admin"} component={AdminApp}/>
-        <Route component={LoginApp}/>
+        <Route path={"/device"} component={DeviceApp} />
+        <Route path={"/admin"} component={AdminApp} />
+        <Route component={LoginApp} />
       </Switch>
     );
   }

@@ -2,12 +2,9 @@ import styled from "styled-components/macro";
 import colors from "dark/colors";
 
 export default styled.div`
-  color: #FAFAFA;
-  padding: 0.2em;
-  min-width: 8em;
-  box-sizing: border-box;
-  border-radius: 0.1em;
-  text-align: center;
+  width: 10px;
+  height: 100%;
+  
 
   ${props => props.available && `background: ${colors.success}`};
   ${props => props.occupied && `background: ${colors.error}`};

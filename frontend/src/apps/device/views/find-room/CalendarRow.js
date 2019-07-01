@@ -20,9 +20,9 @@ import { deviceActions, meetingActions } from "apps/device/store/actions";
 import ActionError from "../../components/ActionError";
 import Section, { partialMixin } from "dark/Section";
 import LoaderButton from "dark/LoaderButton";
-import Button from "dark/Button";
-import Status from "dark/Status";
 import colors from "dark/colors";
+import PeopleIcon from "./PeopleIcon";
+import Button from "./Button";
 
 const Header = styled.div`
   display: flex;
@@ -32,42 +32,85 @@ const Header = styled.div`
 
 const RowWrapper = styled(Section)`
   :first-child {
-    ${partialMixin}
+    ${partialMixin};
   }
 `;
 
-const RowCard = styled.div`
-  margin: 0 0.85rem 1rem 0.85rem;
-  background: #424242;
-  padding: 0.6rem 1rem;
-  color: ${colors.foreground.white}
-`;
+const RowCard = styled.div(props => ({
+  margin: "0 0.85rem 1rem 0.85rem",
+  background: "#424242",
+  padding: "0.6rem 1rem",
+  color: colors.foreground.white,
+  borderLeft: `0.7rem solid ${props.statusColor}`
+}));
 
 const Content = styled.div`
- font-size: 0.8rem; 
- margin-top: 0.5rem;
- line-height: 1.2rem;
- overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  line-height: 1.2rem;
+  overflow: hidden;
+  & > button:first-child::before {
+    content: "Book for ";
+  }
 `;
 
-const getAvailability = (isAllDayMeeting, timeToStart, minutesAvailable) => {
-  if (isAllDayMeeting) {
-    return <Status occupied>{i18next.t("availability.occupied-all-day")}</Status>;
+const getStatusColor = (roomBooked, endsSoon, meetingStartingSoon) => {
+  if (meetingStartingSoon) {
+    return colors.info;
+  } else if (roomBooked) {
+    return colors.error;
+  } else if (endsSoon) {
+    return colors.warning;
+  } else {
+    return colors.success;
   }
-
-  if (timeToStart >= 15 || minutesAvailable < 5) {
-    return <Status occupied>{i18next.t("availability.occupied")}</Status>;
-  }
-  if (timeToStart >= 1) {
-    return <Status
-      warning>{i18next.t("availability.available-in", { time: prettyFormatMinutes(Math.ceil(timeToStart)) })}</Status>;
-  }
-
-  return <Status available>{i18next.t("availability.available")}</Status>;
 };
 
+const isMeetingInProgress = (isAllDayMeeting, timeToStart, minutesAvailable) => {
+  return isAllDayMeeting || timeToStart >= 15 || minutesAvailable < 5;
+};
 
-const CalendarRow = ({ calendarId, isReadOnlyDevice, calendarName, currentMeeting, nextMeeting, timestamp, currentActionSource, isCurrentActionSuccess, isCurrentActionError, isRetryingAction, createMeeting, acknowledgeMeetingCreated, isAmPmClock }) => {
+const meetingEndsSoon = timeToStart => {
+  return timeToStart >= 1;
+};
+
+const meetingStartingSoon = (currentMeeting, timestamp) => {
+  if (!currentMeeting || !timestamp) {
+    return 0;
+  }
+  const diff = timeDifferenceInMinutes(currentMeeting.startTimestamp, timestamp);
+  if (diff > 0 && diff < 5) {
+    return Math.round(diff);
+  }
+};
+
+const meetingEndsIn = (currentMeeting, timestamp) => {
+  if (!currentMeeting || !timestamp) {
+    return 0;
+  }
+  const diff = timeDifferenceInMinutes(currentMeeting.endTimestamp, timestamp);
+  if (diff > 0) {
+    return Math.round(diff);
+  }
+};
+
+const CalendarRow = ({
+  calendarId,
+  isReadOnlyDevice,
+  calendarName,
+  currentMeeting,
+  nextMeeting,
+  timestamp,
+  currentActionSource,
+  isCurrentActionSuccess,
+  isCurrentActionError,
+  isRetryingAction,
+  createMeeting,
+  acknowledgeMeetingCreated,
+  isAmPmClock
+}) => {
   const startTimestamp = currentMeeting ? currentMeeting.endTimestamp : timestamp;
   const endTimestamp = nextMeeting ? nextMeeting.startTimestamp : Number.POSITIVE_INFINITY;
 
@@ -83,8 +126,21 @@ const CalendarRow = ({ calendarId, isReadOnlyDevice, calendarName, currentMeetin
   const showMeetingDetails = !isAvailable && !showSuccessInfo && !showError;
   const showButtons = !isReadOnlyDevice && isAvailable && !showSuccessInfo && !showError;
 
+  const meetingInProgress = isMeetingInProgress(
+    currentMeeting && currentMeeting.isAllDayEvent,
+    timeToStart,
+    minutesAvailable
+  );
+  const startingSoon = meetingStartingSoon(currentMeeting, timestamp);
+
+  let people = calendarName.match(/[0-9]+P/g);
+  if (people && people[0]) {
+    people = people[0].slice(0, -1);
+  }
+
   const CreateButton = ({ value, name }) => (
     <LoaderButton
+      as={Button}
       disabled={currentActionSource !== null}
       isLoading={currentActionSource === name}
       onClick={() => createMeeting(calendarId, value, name)}
@@ -94,34 +150,54 @@ const CalendarRow = ({ calendarId, isReadOnlyDevice, calendarName, currentMeetin
 
   return (
     <RowWrapper>
-      <RowCard>
+      <RowCard statusColor={getStatusColor(meetingInProgress, timeToStart, startingSoon)}>
         <Header>
           <span style={{ fontSize: "1.2rem" }}>{calendarName}</span>
-          {getAvailability(currentMeeting && currentMeeting.isAllDayEvent, timeToStart, minutesAvailable)}
+          <span>
+            <PeopleIcon /> {people ? people : "?"}
+          </span>
         </Header>
-
         <Content>
-          {showMeetingDetails && <>
-            {getMeetingSummary(currentMeeting)}{" "}
-            {currentMeeting && !currentMeeting.isAllDayEvent && <>
-              <Time timestamp={currentMeeting.startTimestamp} ampm={isAmPmClock}/>
-              {" - "}
-              <Time timestamp={currentMeeting.endTimestamp} ampm={isAmPmClock}/>
-            </>}
-          </>}
-          {showSuccessInfo && <>
-            <span style={{ marginRight: "1rem" }}>{i18next.t("meeting-created")}</span>
-            <Button primary onClick={acknowledgeMeetingCreated}>OK</Button>
-          </>}
-          {showError && <ActionError/>}
-          {showButtons && <>
-            <Button disabled success>Start</Button>
-            {minutesAvailable > 20 && <CreateButton value={15} name={`${calendarId}-create-15`}/>}
-            {minutesAvailable > 40 && <CreateButton value={30} name={`${calendarId}-create-30`}/>}
-            {minutesAvailable > 70 && <CreateButton value={60} name={`${calendarId}-create-60`}/>}
-            {minutesAvailable > 130 && <CreateButton value={120} name={`${calendarId}-create-120`}/>}
-            {minutesAvailable <= 130 && <CreateButton value={minutesAvailable} name={`${calendarId}-create-custom`}/>}
-          </>}
+          <div>
+            {showMeetingDetails && (
+              <>
+                {getMeetingSummary(currentMeeting)}
+                <br />
+                {currentMeeting &&
+                  !currentMeeting.isAllDayEvent && (
+                    <>
+                      <Time timestamp={currentMeeting.startTimestamp} ampm={isAmPmClock} />
+                      {" - "}
+                      <Time timestamp={currentMeeting.endTimestamp} ampm={isAmPmClock} />
+                      {startingSoon ? ` · Starts in ${startingSoon} min` : ""}
+                      {!startingSoon && (meetingInProgress || meetingEndsSoon(timeToStart))
+                        ? ` · Ends in ${meetingEndsIn(currentMeeting, timestamp)} min`
+                        : ""}
+                    </>
+                  )}
+              </>
+            )}
+            {showSuccessInfo && (
+              <>
+                <span style={{ marginRight: "1rem" }}>{i18next.t("meeting-created")}</span>
+                <Button primary onClick={acknowledgeMeetingCreated}>
+                  OK
+                </Button>
+              </>
+            )}
+            {showError && <ActionError />}
+            {showButtons && (
+              <>
+                {minutesAvailable > 20 && <CreateButton value={15} name={`${calendarId}-create-15`} />}
+                {minutesAvailable > 40 && <CreateButton value={30} name={`${calendarId}-create-30`} />}
+                {minutesAvailable > 70 && <CreateButton value={60} name={`${calendarId}-create-60`} />}
+                {minutesAvailable > 130 && <CreateButton value={120} name={`${calendarId}-create-120`} />}
+                {minutesAvailable <= 130 && (
+                  <CreateButton value={minutesAvailable} name={`${calendarId}-create-custom`} />
+                )}
+              </>
+            )}
+          </div>
         </Content>
       </RowCard>
     </RowWrapper>
@@ -141,7 +217,7 @@ const mapStateToProps = (state, { calendarId }) => ({
   isReadOnlyDevice: isReadOnlyDeviceSelector(state)
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   createMeeting: (calendarId, minutes, source) => {
     dispatch(deviceActions.$allCalendarsViewActivity());
     dispatch(meetingActions.createMeetingInAnotherRoom(calendarId, minutes));

@@ -38,7 +38,7 @@ const RootFontSize = createGlobalStyle`
   }
 `;
 
-export default styled(props => (<>
+export default styled(({ flexbox, ...props}) => (<>
     <RootFontSize fontSize={props.fontSize || 1}/>
     <div {...props}/>
   </>
@@ -47,6 +47,6 @@ export default styled(props => (<>
   flex-direction: column;
   height: 100%;
   width: 100%;
-  font-family: 'Abel', sans-serif;
-  background: ${colors.background.medium};
+  font-family: ${props => props.fontFamily ? props.fontFamily : 'Lato, sans-serif'};
+  background: ${props => props.background ? props.background : colors.background.medium};
 `;

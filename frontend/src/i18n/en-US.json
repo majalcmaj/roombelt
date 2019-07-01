@@ -19,8 +19,8 @@
   "meeting": {
     "no-title": "(No title)",
     "private": "(Private meeting)",
-    "guests": "and 1 guest",
-    "guests_plural": "and {{ count }} guests",
+    "guests": "with 1 participant",
+    "guests_plural": "with {{ count }} participants",
     "next": "Next",
     "quick-meeting-title": "Meeting in {{ roomName }}"
   },
@@ -34,7 +34,7 @@
     "check-in": "Check in",
     "start-early": "Start early",
     "cancel-meeting": "Cancel meeting",
-    "find-room": "Find room",
+    "find-room": "Find other room",
     "check-in-warning": "This meeting will be cancelled automatically in {{ count }} min."
   },
   "full-screen": "Full screen",

@@ -7,6 +7,7 @@
     "npm": "6.4.1"
   },
   "scripts": {
+    "storybook": "start-storybook",
     "dev:frontend": "cd frontend && cross-env PORT=3001 REACT_APP_VERSION=$npm_package_version BROWSER=none react-scripts start",
     "dev:backend": "cross-env PORT=3000 NODE_ENV=development nodemon --watch backend index.js",
     "test:frontend": "cd frontend && cross-env NODE_PATH=./src react-scripts test",
@@ -37,10 +38,12 @@
     "react-table": "^6.10.0",
     "sequelize": "5.3.1",
     "simple-oauth2": "^2.2.1",
-    "sqlite3": "^4.0.4",
+    "sqlite3": "^4.0.9",
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "@storybook/addon-centered": "^5.1.9",
+    "@storybook/react": "^5.1.9",
     "babel-plugin-macros": "^2.4.3",
     "babel-plugin-styled-components": "^1.9.2",
     "cross-env": "^5.1.4",

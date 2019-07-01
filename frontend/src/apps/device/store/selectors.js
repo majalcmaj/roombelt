@@ -1,5 +1,6 @@
 import { createSelector } from "reselect";
 import { timeDifferenceInMinutes } from "../../../services/formatting";
+import i18next from "i18next";
 
 export const isSubscriptionCancelledSelector = state => state.appState.isSubscriptionCancelled;
 export const isDeviceRemovedSelector = state => state.appState.isRemoved;
@@ -112,3 +113,59 @@ export const minutesLeftForCheckInSelector = createSelector(
     return minutesForCheckIn - timeFromStartInMinutes;
   }
 );
+
+const currentTimestampSelector = state => state.timestamp;
+
+export const getRoomStatus = createSelector(
+  [currentTimestampSelector, currentMeetingSelector, requireCheckInSelector],
+  (currentTimestamp, currentMeeting, requireCheckIn) => {
+    if (!currentMeeting) {
+      return {
+        status: 'available',
+        label: i18next.t("availability.available")
+      }
+    }
+  
+    if (currentMeeting.isAllDayEvent) {
+      return {
+        status: 'occupied',
+        label: i18next.t("availability.occupied-all-day")
+      }
+    }
+  
+    if (currentMeeting.isCheckedIn) {
+      return {
+        status: 'occupied',
+        label: i18next.t("availability.occupied")
+      }
+    }
+  
+    const fromStart = Math.floor((currentTimestamp - currentMeeting.startTimestamp) / 1000 / 60);
+  
+    if (fromStart < 0) {
+      return {
+        status: 'warning',
+        label: i18next.t("availability.starts.in", { count: -fromStart })
+      }
+    }
+  
+    if (fromStart === 0) {
+      return {
+        status: 'occupied',
+        label: i18next.t("availability.starts.now", { count: -fromStart })
+      }
+    }
+  
+    if (requireCheckIn) {
+      return {
+        status: 'occupied',
+        label: i18next.t("availability.starts.ago", { count: fromStart })
+      }
+    }
+
+    return {
+      status: 'occupied',
+      label: i18next.t("availability.occupied")
+    }
+  }
+)

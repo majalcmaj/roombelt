@@ -119,7 +119,7 @@ const Button = styled(UnderlyingComponent)`
   display: ${props => (props.block ? "block" : "inline-block")};
   min-width: 6em;
   text-align: center;
-  font-family: "Roboto", sans-serif;
+  font-family: "Lato", sans-serif;
   border-radius: 0.2em;
   font-size: 1em;
   padding: 0.75em;

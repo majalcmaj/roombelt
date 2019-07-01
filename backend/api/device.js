@@ -1,5 +1,6 @@
 const router = require("express-promise-router")();
 const Moment = require("moment");
+const fs = require("fs");
 
 const context = require("../context");
 const logger = require("../logger");
@@ -48,29 +49,43 @@ router.use("/device", async function(req, res) {
 });
 
 async function getCalendarInfo(calendarId, calendarProvider, showTentativeMeetings) {
-  const calendar = calendarId && await calendarProvider.getCalendar(calendarId);
-  const calendarEvents = calendarId && await calendarProvider.getEvents(calendarId, { showTentativeMeetings });
+  const calendar = calendarId && (await calendarProvider.getCalendar(calendarId));
+  const calendarEvents = calendarId && (await calendarProvider.getEvents(calendarId, { showTentativeMeetings }));
 
-  const events = calendarId && calendarEvents
-    .filter(event => event.isAllDayEvent || getTimestamp(event.end) > Date.now())
-    .slice(0, 10)
-    .map(event => !event.isPrivate ? event : {
-      ...event,
-      summary: null,
-      attendees: []
-    })
-    .map(event => !event.isCreatedFromDevice ? event : {
-      ...event,
-      organizer: { displayName: "Roombelt" },
-      attendees: []
-    });
+  const events =
+    calendarId &&
+    calendarEvents
+      .filter(event => event.isAllDayEvent || getTimestamp(event.end) > Date.now())
+      .slice(0, 10)
+      .map(
+        event =>
+          !event.isPrivate
+            ? event
+            : {
+                ...event,
+                summary: null,
+                attendees: []
+              }
+      )
+      .map(
+        event =>
+          !event.isCreatedFromDevice
+            ? event
+            : {
+                ...event,
+                organizer: { displayName: "Roombelt" },
+                attendees: []
+              }
+      );
 
-  return calendar && {
-    id: calendarId,
-    name: calendar && calendar.summary,
-    canModifyEvents: calendar && calendar.canModifyEvents,
-    events
-  };
+  return (
+    calendar && {
+      id: calendarId,
+      name: calendar && calendar.summary,
+      canModifyEvents: calendar && calendar.canModifyEvents,
+      events
+    }
+  );
 }
 
 async function getAllCalendars(req) {
@@ -81,8 +96,10 @@ async function getAllCalendars(req) {
   }
 
   const includeUserCalendarsForFindRoom = device.deviceType === "calendar" && req.query["all-calendars"] === "true";
-  const includeUserCalendarsForDashboard = device.deviceType === "dashboard" && device.calendarId.split(";").includes("all-connected-devices");
-  const additionalCalendarIdsForDashboard = device.deviceType === "dashboard" && device.calendarId.split(";").filter(x => x !== "all-connected-devices");
+  const includeUserCalendarsForDashboard =
+    device.deviceType === "dashboard" && device.calendarId.split(";").includes("all-connected-devices");
+  const additionalCalendarIdsForDashboard =
+    device.deviceType === "dashboard" && device.calendarId.split(";").filter(x => x !== "all-connected-devices");
 
   const calendarIds = additionalCalendarIdsForDashboard || [];
 
@@ -96,11 +113,15 @@ async function getAllCalendars(req) {
     calendarIds.push(...userCalendarIds);
   }
 
-  const calendars = await Promise.all([...new Set(calendarIds)].map(
-    calendarId => getCalendarInfo(calendarId, req.context.calendarProvider, req.context.device.showTentativeMeetings))
+  const calendars = await Promise.all(
+    [...new Set(calendarIds)].map(calendarId =>
+      getCalendarInfo(calendarId, req.context.calendarProvider, req.context.device.showTentativeMeetings)
+    )
   );
 
-  const userDevicesWithDisplayName = userDevices.filter(x => x.displayName).sort((a, b) => a.displayName.localeCompare(b.displayName));
+  const userDevicesWithDisplayName = userDevices
+    .filter(x => x.displayName)
+    .sort((a, b) => a.displayName.localeCompare(b.displayName));
 
   return calendars.filter(calendar => calendar).map(calendar => {
     const device = userDevicesWithDisplayName.find(x => x.calendarId === calendar.id);
@@ -108,10 +129,16 @@ async function getAllCalendars(req) {
   });
 }
 
+const data = fs.readFileSync(__dirname + "/../../package.json", "utf8");
+const config = JSON.parse(data);
+
 router.get("/device", async function(req, res) {
   const device = req.context.device;
 
-  const calendar = (device.deviceType === "calendar" && device.calendarId) ? await getCalendarInfo(device.calendarId, req.context.calendarProvider, req.context.device.showTentativeMeetings) : null;
+  const calendar =
+    device.deviceType === "calendar" && device.calendarId
+      ? await getCalendarInfo(device.calendarId, req.context.calendarProvider, req.context.device.showTentativeMeetings)
+      : null;
   const isReadOnlyDevice = device.isReadOnlyDevice || (calendar && !calendar.canModifyEvents);
 
   if (calendar && device && device.displayName) {
@@ -119,6 +146,7 @@ router.get("/device", async function(req, res) {
   }
 
   res.json({
+    version: config.version,
     deviceType: device.deviceType,
     language: process.env["REFRESH_LANG"] || device.language,
     displayName: device.displayName,
@@ -140,7 +168,9 @@ router.use("/device/meeting", (req, res, next) => (req.context.device.calendarId
 router.post("/device/meeting", async function(req, res) {
   if (req.body.calendarId) {
     const devices = await req.context.storage.devices.getDevicesForUser(req.context.device.userId);
-    const device = devices.find(device => device.deviceType === "calendar" && device.calendarId === req.body.calendarId);
+    const device = devices.find(
+      device => device.deviceType === "calendar" && device.calendarId === req.body.calendarId
+    );
 
     if (!device) {
       return res.sendStatus(404);
@@ -157,7 +187,9 @@ router.post("/device/meeting", async function(req, res) {
     showTentativeMeetings: req.context.device.showTentativeMeetings
   });
 
-  const currentEvent = events.find(event => !event.isAllDayEvent && getTimestamp(event.start) < Date.now() && getTimestamp(event.end) > Date.now());
+  const currentEvent = events.find(
+    event => !event.isAllDayEvent && getTimestamp(event.start) < Date.now() && getTimestamp(event.end) > Date.now()
+  );
   if (currentEvent) {
     return res.sendStatus(409);
   }
@@ -280,13 +312,25 @@ router.delete("/device/meeting/:meetingId", async function(req, res) {
   }
 
   async function removeRecurringMeetingIfNeeded() {
-    if (!req.body.isRemovedAutomatically || !event.recurringMasterId || !device.minutesForCheckIn || !device.recurringMeetingsCheckInTolerance) {
+    if (
+      !req.body.isRemovedAutomatically ||
+      !event.recurringMasterId ||
+      !device.minutesForCheckIn ||
+      !device.recurringMeetingsCheckInTolerance
+    ) {
       return;
     }
 
-    const lastAuditEntries = await req.context.storage.audit.findLastRecurringMeetingEvents(device.deviceId, event.recurringMasterId, device.recurringMeetingsCheckInTolerance);
+    const lastAuditEntries = await req.context.storage.audit.findLastRecurringMeetingEvents(
+      device.deviceId,
+      event.recurringMasterId,
+      device.recurringMeetingsCheckInTolerance
+    );
 
-    if (lastAuditEntries.length < device.recurringMeetingsCheckInTolerance || lastAuditEntries.some(event => event.eventType !== EventTypes.AUTO_CANCEL)) {
+    if (
+      lastAuditEntries.length < device.recurringMeetingsCheckInTolerance ||
+      lastAuditEntries.some(event => event.eventType !== EventTypes.AUTO_CANCEL)
+    ) {
       return;
     }
 

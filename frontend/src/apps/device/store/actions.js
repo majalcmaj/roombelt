@@ -58,6 +58,10 @@ export const deviceActions = {
       const shouldGetAllCalendars = showAllCalendarsViewSelector(getState());
       const device = await getDeviceDetails(shouldGetAllCalendars);
 
+      if (device.version && device.version !== window.version) {
+        window.location.reload();
+      }
+
       if (token.isCancelled()) {
         return;
       }
