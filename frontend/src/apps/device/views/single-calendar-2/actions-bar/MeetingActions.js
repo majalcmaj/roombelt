@@ -60,15 +60,16 @@ class MeetingStarted extends React.PureComponent {
       <>
         <LoaderButton
           success
+          as={Button}
           key={"start-early"}
           onClick={() => startMeetingEarly("start-early")}
           isLoading={currentActionSource === "start-early"}
           children={i18next.t("actions.start-early")}
         />
 
-        <Button key={"cancel"} error onClick={() => this.setState({ idOfMeetingToCancel: currentMeeting.id })}>
+        <Button2 key={"cancel"} error onClick={() => this.setState({ idOfMeetingToCancel: currentMeeting.id })}>
           {i18next.t("actions.cancel-meeting")}
-        </Button>
+        </Button2>
       </>
     );
   }

@@ -83,6 +83,7 @@ const CalendarView = ({
       <Spacer />
 
       {nextMeeting && <NextMeeting />}
+      <div style={{ color: 'white', fontSize: '50%', position: 'absolute', bottom: '0.6rem', right: '1rem', opacity: 0.5 }}>v{process.env.REACT_APP_VERSION}</div>
     </Layout>
   );
 };
