@@ -80,6 +80,7 @@ class MeetingStarted extends React.PureComponent {
     return (
       <>
         <LoaderButton
+          as={Button}
           success
           key={"check-in"}
           onClick={() => checkInToMeeting("check-in")}
@@ -87,9 +88,9 @@ class MeetingStarted extends React.PureComponent {
           children={i18next.t("actions.check-in")}
         />
 
-        <Button key={"cancel"} error onClick={() => this.setState({ idOfMeetingToCancel: currentMeeting.id })}>
+        <Button2 key={"cancel"} error onClick={() => this.setState({ idOfMeetingToCancel: currentMeeting.id })}>
           {i18next.t("actions.cancel-meeting")}
-        </Button>
+        </Button2>
 
         {minutesLeftForCheckIn > 0 && (
           <div style={{ color: colors.foreground.gray, marginTop: ".5rem", fontSize: "0.8rem" }}>
