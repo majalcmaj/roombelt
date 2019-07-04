@@ -1,7 +1,6 @@
 import React from "react";
 import i18next from "i18next";
 import { connect } from "react-redux";
-import styled from "styled-components";
 
 import LoaderButton from "dark/LoaderButton";
 import colors from "dark/colors";
