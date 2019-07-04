@@ -17,15 +17,7 @@ import {
 
 import { meetingActions } from "apps/device/store/actions";
 
-import Button from "./Button";
-
-const Button2 = styled(Button)`
-  border: 2px solid white;
-  background: transparent;
-  color: white;
-  padding-left: 1rem;
-  padding-right: 1rem;
-`;
+import Button, { Button2 } from "./Button";
 
 class MeetingStarted extends React.PureComponent {
   state = { idOfMeetingToCancel: null };

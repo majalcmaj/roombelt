@@ -7,13 +7,13 @@ import { prettyFormatMinutes } from "services/formatting";
 import { currentActionSourceSelector, minutesAvailableTillNextMeetingSelector } from "apps/device/store/selectors";
 import { meetingActions } from "apps/device/store/actions";
 
-import Button from './Button'
+import Button, { Button2 } from './Button'
 
 const RoomAvailable = props => {
-  const CreateButton = ({ value, name, label = "" }) => (
+  const CreateButton = ({ value, name, label = "", as = Button }) => (
     <>
       <LoaderButton
-        as={Button}
+        as={as}
         white={false}
         disabled={props.currentActionSource !== null}
         isLoading={props.currentActionSource === name}
@@ -28,9 +28,9 @@ const RoomAvailable = props => {
   return (
     <div>
       {props.minutesToNextMeeting > 20 && <CreateButton value={15} name="create-15" label="Book for " />}
-      {props.minutesToNextMeeting > 40 && <CreateButton value={30} name="create-30" />}
-      {props.minutesToNextMeeting > 70 && <CreateButton value={60} name="create-60" />}
-      {props.minutesToNextMeeting > 130 && <CreateButton value={120} name="create-120" />}
+      {props.minutesToNextMeeting > 40 && <CreateButton as={Button2} value={30} name="create-30" />}
+      {props.minutesToNextMeeting > 70 && <CreateButton as={Button2} value={60} name="create-60" />}
+      {props.minutesToNextMeeting > 130 && <CreateButton as={Button2} value={120} name="create-120" />}
       {
         props.minutesToNextMeeting <= 130 && 
         <CreateButton value={props.minutesToNextMeeting} name="create-custom" label={props.minutesToNextMeeting <= 20 && "Book for "}/>

@@ -24,6 +24,13 @@ import colors from "dark/colors";
 import PeopleIcon from "./PeopleIcon";
 import Button from "./Button";
 
+const CustomButton = styled(Button)`
+  @media (orientation: portrait) {
+    display: inline-block;
+    width: auto;
+  }
+`
+
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
@@ -140,7 +147,7 @@ const CalendarRow = ({
 
   const CreateButton = ({ value, name }) => (
     <LoaderButton
-      as={Button}
+      as={CustomButton}
       disabled={currentActionSource !== null}
       isLoading={currentActionSource === name}
       onClick={() => createMeeting(calendarId, value, name)}

@@ -25,6 +25,10 @@ const Title = styled.h1`
 const Meta = styled.p`
   color: white;
   display: flex;
+
+  @media (orientation: portrait) {
+    flex-direction: column;
+  }
 `;
 
 const CurrentMeeting = ({ currentMeeting, nextMeeting, minutesToNextMeeting, isAmPmClock }) => {
