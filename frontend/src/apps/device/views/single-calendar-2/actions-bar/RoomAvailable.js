@@ -33,7 +33,7 @@ const RoomAvailable = props => {
       {props.minutesToNextMeeting > 130 && <CreateButton as={Button2} value={120} name="create-120" />}
       {
         props.minutesToNextMeeting <= 130 && 
-        <CreateButton value={props.minutesToNextMeeting} name="create-custom" label={props.minutesToNextMeeting <= 20 && "Book for "}/>
+        <CreateButton as={Button2} value={props.minutesToNextMeeting} name="create-custom" label={props.minutesToNextMeeting <= 20 && "Book for "}/>
         }
     </div>
   );

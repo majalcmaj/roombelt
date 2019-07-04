@@ -24,11 +24,11 @@ class MeetingStarted extends React.PureComponent {
 
   render() {
     const { currentMeeting, requireCheckIn, isAfterCurrentMeetingStartTime } = this.props;
-    // const { idOfMeetingToCancel } = this.state;
+    const { idOfMeetingToCancel } = this.state;
 
-    // if (idOfMeetingToCancel === currentMeeting.id) {
-    //   return this.renderEndMeetingConfirmation();
-    // }
+    if (idOfMeetingToCancel === currentMeeting.id) {
+      return this.renderEndMeetingConfirmation();
+    }
 
     if (currentMeeting.isCheckedIn) {
       return this.renderExtendMeeting();
@@ -146,7 +146,7 @@ class MeetingStarted extends React.PureComponent {
         <Button key={"back"} disabled={isInProgress} onClick={() => this.setState({ idOfMeetingToCancel: null })}>
           {i18next.t("actions.back")}
         </Button>
-        <LoaderButton key={"confirm"} isLoading={isInProgress} onClick={onConfirm} error>
+        <LoaderButton as={Button2} key={"confirm"} isLoading={isInProgress} onClick={onConfirm} error>
           {i18next.t("actions.confirm")}
         </LoaderButton>
       </>
