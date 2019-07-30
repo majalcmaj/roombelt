@@ -26,6 +26,8 @@ import { changeLanguage } from "i18n";
 import i18next from "i18next";
 import { wait, waitUntilTrue } from "utils/time";
 
+import { $updateClock, $startClock } from "apps/device/store/state/timestamp/timestamp"
+
 export const deviceActions = {
   $markInitialized: action(),
   initialize: () => async (dispatch, getState) => {
@@ -107,12 +109,8 @@ export const deviceActions = {
     }
   },
 
-  $updateClock: action(timestamp => ({ timestamp })),
-  $startClock: () => dispatch => {
-    dispatch(deviceActions.$updateClock(Date.now()));
-
-    setInterval(() => dispatch(deviceActions.$updateClock(Date.now())), 10 * 1000);
-  },
+  $updateClock,
+  $startClock,
 
   $updateFullScreenState: action((isSupported, isFullScreen) => ({ isSupported, isFullScreen })),
   $initializeFullScreenSupport: () => dispatch => {

@@ -7,7 +7,8 @@ import {
   fontSizeSelector,
   isAmPmClockSelector,
   nextMeetingSelector,
-  getRoomStatus
+  getRoomStatus,
+  timestampSelector
 } from "../../store/selectors";
 
 import NextMeeting from "./NextMeeting";
@@ -91,7 +92,7 @@ const CalendarView = ({
 const mapStateToProps = state => ({
   calendarName: calendarNameSelector(state),
   nextMeeting: nextMeetingSelector(state),
-  currentTimestamp: state.timestamp,
+  currentTimestamp: timestampSelector(state),
   isAmPmClock: isAmPmClockSelector(state),
   fontSize: fontSizeSelector(state),
   roomStatus: getRoomStatus(state)

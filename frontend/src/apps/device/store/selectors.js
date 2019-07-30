@@ -5,7 +5,7 @@ import i18next from "i18next";
 export const isSubscriptionCancelledSelector = state => state.appState.isSubscriptionCancelled;
 export const isDeviceRemovedSelector = state => state.appState.isRemoved;
 export const isInitializedSelector = state => state.appState.isInitialized;
-export const timestampSelector = state => state.timestamp;
+export const timestampSelector = state => state.timestamp.value;
 export const deviceSelector = state => state.device;
 export const isInOfflineModeSelector = state => state.appState.isOffline;
 export const showAllCalendarsViewSelector = state => state.appState.showAllCalendarsView;
@@ -114,10 +114,8 @@ export const minutesLeftForCheckInSelector = createSelector(
   }
 );
 
-const currentTimestampSelector = state => state.timestamp;
-
 export const getRoomStatus = createSelector(
-  [currentTimestampSelector, currentMeetingSelector, requireCheckInSelector],
+  [timestampSelector, currentMeetingSelector, requireCheckInSelector],
   (currentTimestamp, currentMeeting, requireCheckIn) => {
     if (!currentMeeting) {
       return {
