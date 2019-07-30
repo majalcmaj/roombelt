@@ -4,7 +4,7 @@ import { combineReducers } from "redux";
 import Moment from "moment";
 import { getFontSize, setFontSize } from "services/persistent-store";
 
-import timestamp from './state/timestamp/timestamp'
+import timestamp from './state/timestamp/timestamp.duck'
 
 const device = (state = null, action) => {
   if (action.type !== deviceActions.$updateDeviceData) return state;

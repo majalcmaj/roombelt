@@ -20,13 +20,14 @@ import {
   lastActivityOnShowCalendarsViewSelector,
   minutesLeftForCheckInSelector,
   showAllCalendarsViewSelector
-} from "apps/device/store/selectors";
+} from "./selectors";
 import { changeLanguage } from "i18n";
 
 import i18next from "i18next";
 import { wait, waitUntilTrue } from "utils/time";
 
-import { $updateClock, $startClock } from "apps/device/store/state/timestamp/timestamp"
+import { $updateClock } from "./state/timestamp/timestamp.duck"
+import { $startClock } from './state/timestamp/timestamp.thunks'
 
 export const deviceActions = {
   $markInitialized: action(),
