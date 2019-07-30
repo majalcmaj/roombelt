@@ -40,7 +40,6 @@
     "simple-oauth2": "^2.2.1",
     "sqlite3": "^4.0.9",
     "winston": "^3.2.1",
-
     "@storybook/addon-centered": "^5.1.9",
     "@storybook/react": "^5.1.9",
     "babel-plugin-macros": "^2.4.3",
@@ -77,5 +76,8 @@
     "store": "^2.0.12",
     "styled-components": "^4.1.2",
     "webfontloader": "^1.6.28"
+  },
+  "devDependencies": {
+    "typescript": "^3.5.3"
   }
 }
