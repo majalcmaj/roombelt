@@ -32,6 +32,15 @@ import { $startClock } from "./state/timestamp/timestamp.thunks";
 import { $updateDeviceData } from "./state/device/device.duck";
 
 import {
+  $setActionSource,
+  $startAction,
+  $setActionIsRetrying,
+  $setActionError,
+  $setActionSuccess,
+  endAction
+} from "./state/currentMeetingActions/currentMeetingActions.duck";
+
+import {
   $markInitialized,
   $markRemoved,
   $setIsSubscriptionCancelled,
@@ -214,12 +223,12 @@ export const deviceActions = {
 };
 
 export const meetingActions = {
-  $startAction: action(currentAction => ({ currentAction })),
-  endAction: action(),
-  $setActionError: action(errorStatusCode => ({ errorStatusCode })),
-  $setActionSource: action(source => ({ source })),
-  $setActionIsRetrying: action(),
-  $setActionSuccess: action(),
+  $startAction,
+  endAction,
+  $setActionError,
+  $setActionSource,
+  $setActionIsRetrying,
+  $setActionSuccess,
 
   retry: () => (dispatch, getState) => {
     dispatch(meetingActions.$setActionIsRetrying());

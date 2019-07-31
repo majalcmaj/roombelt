@@ -10,7 +10,7 @@ interface IState {
   // it is a timestamp
   lastActivityOnShowCalendarsView: null | number;
 }
-const initialState = {
+const initialState: IState = {
   isSubscriptionCancelled: false,
   isRemoved: false,
   isInitialized: false,

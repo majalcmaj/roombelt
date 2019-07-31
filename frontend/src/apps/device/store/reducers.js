@@ -1,4 +1,4 @@
-import { deviceActions, meetingActions } from "apps/device/store/actions";
+import { deviceActions } from "apps/device/store/actions";
 
 import { combineReducers } from "redux";
 import { getFontSize, setFontSize } from "services/persistent-store";
@@ -6,34 +6,7 @@ import { getFontSize, setFontSize } from "services/persistent-store";
 import timestamp from "./state/timestamp/timestamp.duck";
 import device from "./state/device/device.duck";
 import appState from "./state/appState/appState.duck";
-
-const defaultCurrentMeetingActionsState = {
-  source: null,
-  currentAction: null,
-  isRetrying: false,
-  isError: false,
-  errorStatusCode: null,
-  isSuccess: false
-};
-
-const currentMeetingActions = (state = defaultCurrentMeetingActionsState, action) => {
-  switch (action.type) {
-    case meetingActions.$setActionSource:
-      return { ...state, source: action.source };
-    case meetingActions.$startAction:
-      return { ...state, currentAction: action.currentAction, isError: false };
-    case meetingActions.$setActionIsRetrying:
-      return { ...state, isRetrying: true };
-    case meetingActions.$setActionError:
-      return { ...state, isError: true, errorStatusCode: action.errorStatusCode, isRetrying: false };
-    case meetingActions.$setActionSuccess:
-      return { ...state, isSuccess: true, isRetrying: false };
-    case meetingActions.endAction:
-      return defaultCurrentMeetingActionsState;
-    default:
-      return state;
-  }
-};
+import currentMeetingActions from "./state/currentMeetingActions/currentMeetingActions.duck";
 
 const displayOptions = (state = { isFullScreen: null, isSupported: null, fontSize: getFontSize() }, action) => {
   switch (action.type) {
