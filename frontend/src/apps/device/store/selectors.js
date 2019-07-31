@@ -6,7 +6,7 @@ export const isSubscriptionCancelledSelector = state => state.appState.isSubscri
 export const isDeviceRemovedSelector = state => state.appState.isRemoved;
 export const isInitializedSelector = state => state.appState.isInitialized;
 export const timestampSelector = state => state.timestamp.value;
-export const deviceSelector = state => state.device;
+export const deviceSelector = state => state.device.data;
 export const isInOfflineModeSelector = state => state.appState.isOffline;
 export const showAllCalendarsViewSelector = state => state.appState.showAllCalendarsView;
 export const lastActivityOnShowCalendarsViewSelector = state => state.appState.lastActivityOnShowCalendarsView;
@@ -20,11 +20,12 @@ export const isRetryingActionSelector = state => state.currentMeetingActions.isR
 export const fontSizeSelector = state => state.displayOptions.fontSize;
 
 export const calendarSelector = (state, props) => {
+  const device = deviceSelector(state);
   if (!props || !props.calendarId) {
-    return state.device.calendar;
+    return device && device.calendar;
   }
 
-  return state.device.allCalendars.find(calendar => calendar.id === props.calendarId);
+  return device && device.allCalendars.find(calendar => calendar.id === props.calendarId);
 };
 
 export const isDeviceConnectedSelector = createSelector(deviceSelector, device => device && !device.connectionCode);

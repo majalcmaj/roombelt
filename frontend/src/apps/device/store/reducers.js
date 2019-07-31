@@ -1,31 +1,10 @@
 import { deviceActions, meetingActions } from "apps/device/store/actions";
 
 import { combineReducers } from "redux";
-import Moment from "moment";
 import { getFontSize, setFontSize } from "services/persistent-store";
 
 import timestamp from './state/timestamp/timestamp.duck'
-
-const device = (state = null, action) => {
-  if (action.type !== deviceActions.$updateDeviceData) return state;
-
-  const getTimestamp = time => time.isTimeZoneFixedToUTC ? Moment.utc(time).valueOf() : Moment(time).valueOf();
-
-  const setEventsTimestamps = calendar => ({
-    ...calendar,
-    events: calendar.events.map(event => ({
-      ...event,
-      startTimestamp: getTimestamp(event.start),
-      endTimestamp: getTimestamp(event.end)
-    }))
-  });
-
-  return {
-    ...action.device,
-    calendar: action.device.calendar && setEventsTimestamps(action.device.calendar),
-    allCalendars: action.device.allCalendars && action.device.allCalendars.map(setEventsTimestamps)
-  };
-};
+import device from './state/device/device.duck'
 
 const defaultCurrentMeetingActionsState = {
   source: null,

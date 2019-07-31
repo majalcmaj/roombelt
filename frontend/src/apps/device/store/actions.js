@@ -26,8 +26,10 @@ import { changeLanguage } from "i18n";
 import i18next from "i18next";
 import { wait, waitUntilTrue } from "utils/time";
 
-import { $updateClock } from "./state/timestamp/timestamp.duck"
-import { $startClock } from './state/timestamp/timestamp.thunks'
+import { $updateClock } from "./state/timestamp/timestamp.duck";
+import { $startClock } from "./state/timestamp/timestamp.thunks";
+
+import { $updateDeviceData } from "./state/device/device.duck";
 
 export const deviceActions = {
   $markInitialized: action(),
@@ -53,7 +55,7 @@ export const deviceActions = {
     dispatch(deviceActions.$initializeOfflineObserver());
   },
 
-  $updateDeviceData: action(device => ({ device })),
+  $updateDeviceData,
   $fetchDeviceData: () => async (dispatch, getState) => {
     const token = cancellationToken(deviceActions.$fetchDeviceData).cancelOthers();
 
@@ -82,7 +84,7 @@ export const deviceActions = {
       }
     }
 
-    const timeout = function() {
+    const timeout = (function() {
       const state = getState();
 
       if (isDeviceRemovedSelector(state)) return ms("1 year");
@@ -90,7 +92,7 @@ export const deviceActions = {
       if (isDashboardDeviceSelector(state) || isCalendarSelectedSelector(state)) return ms("30s");
 
       return ms("5s");
-    }();
+    })();
 
     await wait(timeout);
 
@@ -203,7 +205,7 @@ export const deviceActions = {
 };
 
 export const meetingActions = {
-  $startAction: action((currentAction) => ({ currentAction })),
+  $startAction: action(currentAction => ({ currentAction })),
   endAction: action(),
   $setActionError: action(errorStatusCode => ({ errorStatusCode })),
   $setActionSource: action(source => ({ source })),
@@ -215,11 +217,14 @@ export const meetingActions = {
     dispatch(currentActionSelector(getState()));
   },
 
-  createMeeting: (timeInMinutes) => (dispatch, getState) => {
+  createMeeting: timeInMinutes => (dispatch, getState) => {
     dispatch(meetingActions.$startAction(meetingActions.createMeeting(timeInMinutes)));
 
     const roomName = calendarNameSelector(getState());
-    const createMeetingPromise = api.createMeeting(timeInMinutes, i18next.t("meeting.quick-meeting-title", { roomName }));
+    const createMeetingPromise = api.createMeeting(
+      timeInMinutes,
+      i18next.t("meeting.quick-meeting-title", { roomName })
+    );
 
     dispatch(meetingActions.$handleMeetingActionPromise(createMeetingPromise));
   },
