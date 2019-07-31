@@ -1,4 +1,3 @@
-import { action } from "utils/redux";
 import cancellationToken from "utils/cancellation-token";
 import screenfull from "screenfull";
 import axios from "axios";
@@ -48,6 +47,11 @@ import {
   $updateShowAllCalendarsView,
   $allCalendarsViewActivity
 } from "./state/appState/appState.duck";
+
+import {
+  $updateFullScreenState,
+  $changeFontSize,
+} from './state/displayOptions/displayOptions.duck'
 
 export const deviceActions = {
   $markInitialized,
@@ -133,7 +137,7 @@ export const deviceActions = {
   $updateClock,
   $startClock,
 
-  $updateFullScreenState: action((isSupported, isFullScreen) => ({ isSupported, isFullScreen })),
+  $updateFullScreenState,
   $initializeFullScreenSupport: () => dispatch => {
     const updateStatus = () => {
       dispatch(deviceActions.$updateFullScreenState(screenfull.enabled, screenfull.isFullscreen));
@@ -151,7 +155,8 @@ export const deviceActions = {
     }
   },
 
-  changeFontSize: action(fontSizeDelta => ({ fontSizeDelta })),
+  // TODO - find all usages of changeFontSize and rename it to $changeFontSize
+  changeFontSize: $changeFontSize,
 
   $updateOfflineStatus,
   $initializeOfflineObserver: () => (dispatch, getState) => {
