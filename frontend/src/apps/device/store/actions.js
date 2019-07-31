@@ -31,8 +31,17 @@ import { $startClock } from "./state/timestamp/timestamp.thunks";
 
 import { $updateDeviceData } from "./state/device/device.duck";
 
+import {
+  $markInitialized,
+  $markRemoved,
+  $setIsSubscriptionCancelled,
+  $updateOfflineStatus,
+  $updateShowAllCalendarsView,
+  $allCalendarsViewActivity
+} from "./state/appState/appState.duck";
+
 export const deviceActions = {
-  $markInitialized: action(),
+  $markInitialized,
   initialize: () => async (dispatch, getState) => {
     if (isInitializedSelector(getState())) {
       return;
@@ -135,7 +144,7 @@ export const deviceActions = {
 
   changeFontSize: action(fontSizeDelta => ({ fontSizeDelta })),
 
-  $updateOfflineStatus: action(isOffline => ({ isOffline })),
+  $updateOfflineStatus,
   $initializeOfflineObserver: () => (dispatch, getState) => {
     const successCallback = result => {
       if (isInOfflineModeSelector(getState())) {
@@ -176,8 +185,8 @@ export const deviceActions = {
     await checkVersion();
   },
 
-  $setIsSubscriptionCancelled: action(isSubscriptionCancelled => ({ isSubscriptionCancelled })),
-  $markRemoved: action(),
+  $setIsSubscriptionCancelled,
+  $markRemoved,
   disconnectDevice: () => async () => {
     await removeDevice();
     window.location.reload();
@@ -185,8 +194,8 @@ export const deviceActions = {
 
   setLanguage: language => () => changeLanguage(language),
 
-  $updateShowAllCalendarsView: action(showAllCalendarsView => ({ showAllCalendarsView })),
-  $allCalendarsViewActivity: action(() => ({ timestamp: Date.now() })),
+  $updateShowAllCalendarsView,
+  $allCalendarsViewActivity,
 
   showAllCalendarsView: () => async (dispatch, getState) => {
     dispatch(deviceActions.$updateShowAllCalendarsView(true));

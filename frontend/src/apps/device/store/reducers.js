@@ -3,8 +3,9 @@ import { deviceActions, meetingActions } from "apps/device/store/actions";
 import { combineReducers } from "redux";
 import { getFontSize, setFontSize } from "services/persistent-store";
 
-import timestamp from './state/timestamp/timestamp.duck'
-import device from './state/device/device.duck'
+import timestamp from "./state/timestamp/timestamp.duck";
+import device from "./state/device/device.duck";
+import appState from "./state/appState/appState.duck";
 
 const defaultCurrentMeetingActionsState = {
   source: null,
@@ -29,32 +30,6 @@ const currentMeetingActions = (state = defaultCurrentMeetingActionsState, action
       return { ...state, isSuccess: true, isRetrying: false };
     case meetingActions.endAction:
       return defaultCurrentMeetingActionsState;
-    default:
-      return state;
-  }
-};
-
-const appState = (state = {
-  isSubscriptionCancelled: false,
-  isRemoved: false,
-  isInitialized: false,
-  isOffline: false,
-  showAllCalendarsView: false,
-  lastActivityOnShowCalendarsView: null
-}, action) => {
-  switch (action.type) {
-    case deviceActions.$markInitialized:
-      return { ...state, isInitialized: true };
-    case deviceActions.$markRemoved:
-      return { ...state, isRemoved: true };
-    case deviceActions.$setIsSubscriptionCancelled:
-      return { ...state, isSubscriptionCancelled: action.isSubscriptionCancelled };
-    case deviceActions.$updateOfflineStatus:
-      return { ...state, isOffline: action.isOffline };
-    case deviceActions.$updateShowAllCalendarsView:
-      return { ...state, showAllCalendarsView: action.showAllCalendarsView };
-    case deviceActions.$allCalendarsViewActivity:
-      return { ...state, lastActivityOnShowCalendarsView: action.timestamp };
     default:
       return state;
   }
