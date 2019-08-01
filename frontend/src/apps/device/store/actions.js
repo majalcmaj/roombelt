@@ -122,9 +122,10 @@ export const deviceActions = {
         return;
       }
 
+      changeLanguage(device.language);
+
       dispatch($updateDeviceData(device));
       dispatch($setIsSubscriptionCancelled(false));
-      dispatch(deviceActions.setLanguage(device.language));
       dispatch(deviceActions.$removeCurrentMeetingIfNotCheckedIn());
     } catch (error) {
       if (error.response && error.response.status === 404) {
@@ -199,8 +200,6 @@ export const deviceActions = {
     await removeDevice();
     window.location.reload();
   },
-
-  setLanguage: language => () => changeLanguage(language),
 
   $updateShowAllCalendarsView,
   $allCalendarsViewActivity,
