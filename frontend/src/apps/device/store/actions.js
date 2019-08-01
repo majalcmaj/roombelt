@@ -221,6 +221,36 @@ export const deviceActions = {
   }
 };
 
+const createMeetingInAnotherRoom = (calendarId, timeInMinutes) => async (dispatch, getState) => {
+  dispatch($startAction(createMeetingInAnotherRoom(calendarId, timeInMinutes)));
+
+  const roomName = calendarNameSelector(getState(), { calendarId });
+
+  try {
+    await api.createMeeting(timeInMinutes, i18next.t("meeting.quick-meeting-title", { roomName }), calendarId);
+
+    dispatch($updateDeviceData(await getDeviceDetails(true)));
+    dispatch($setActionSuccess());
+  } catch (error) {
+    console.error(error);
+    dispatch($setActionError());
+  }
+}
+
+const $handleMeetingActionPromise = actionPromise => async dispatch => {
+  try {
+    await actionPromise;
+
+    dispatch($updateDeviceData(await getDeviceDetails()));
+    dispatch(endAction());
+  } catch (error) {
+    console.error(error);
+
+    dispatch($updateDeviceData(await getDeviceDetails()));
+    dispatch($setActionError(error && error.response && error.response.status));
+  }
+}
+
 export const meetingActions = {
   endAction,
   $setActionSource,
@@ -240,7 +270,7 @@ export const meetingActions = {
       i18next.t("meeting.quick-meeting-title", { roomName })
     );
 
-    dispatch(meetingActions.$handleMeetingActionPromise(createMeetingPromise));
+    dispatch($handleMeetingActionPromise(createMeetingPromise));
   },
 
   cancelMeeting: () => async (dispatch, getState) => {
@@ -249,7 +279,7 @@ export const meetingActions = {
     const currentMeetingId = currentMeetingSelector(getState()).id;
     const deleteMeetingPromise = api.deleteMeeting(currentMeetingId, false);
 
-    dispatch(meetingActions.$handleMeetingActionPromise(deleteMeetingPromise));
+    dispatch($handleMeetingActionPromise(deleteMeetingPromise));
   },
 
   endMeeting: () => dispatch => {
@@ -280,36 +310,8 @@ export const meetingActions = {
     const currentMeetingId = currentMeetingSelector(getState()).id;
     const updateMeetingPromise = api.updateMeeting(currentMeetingId, options);
 
-    dispatch(meetingActions.$handleMeetingActionPromise(updateMeetingPromise));
+    dispatch($handleMeetingActionPromise(updateMeetingPromise));
   },
 
-  $handleMeetingActionPromise: actionPromise => async dispatch => {
-    try {
-      await actionPromise;
-
-      dispatch($updateDeviceData(await getDeviceDetails()));
-      dispatch(meetingActions.endAction());
-    } catch (error) {
-      console.error(error);
-
-      dispatch($updateDeviceData(await getDeviceDetails()));
-      dispatch($setActionError(error && error.response && error.response.status));
-    }
-  },
-
-  createMeetingInAnotherRoom: (calendarId, timeInMinutes) => async (dispatch, getState) => {
-    dispatch($startAction(meetingActions.createMeetingInAnotherRoom(calendarId, timeInMinutes)));
-
-    const roomName = calendarNameSelector(getState(), { calendarId });
-
-    try {
-      await api.createMeeting(timeInMinutes, i18next.t("meeting.quick-meeting-title", { roomName }), calendarId);
-
-      dispatch($updateDeviceData(await getDeviceDetails(true)));
-      dispatch($setActionSuccess());
-    } catch (error) {
-      console.error(error);
-      dispatch($setActionError());
-    }
-  }
+  createMeetingInAnotherRoom
 };
