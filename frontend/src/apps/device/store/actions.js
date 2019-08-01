@@ -53,15 +53,45 @@ import {
   $changeFontSize,
 } from './state/displayOptions/displayOptions.duck'
 
+const $initializeApiVersionObserver = () => async () => {
+  let currentVersion = undefined;
+
+  const checkVersion = async () => {
+    const response = await api.getApiVersion();
+
+    if (response && response.version && currentVersion && currentVersion !== response.version) {
+      window.location.reload();
+    }
+
+    if (response) {
+      currentVersion = response.version;
+    }
+  };
+
+  setInterval(checkVersion, 1000 * 60 * 5);
+  await checkVersion();
+}
+
+const $initializeFullScreenSupport = () => dispatch => {
+  const updateStatus = () => {
+    dispatch($updateFullScreenState(screenfull.enabled, screenfull.isFullscreen));
+  };
+
+  updateStatus();
+
+  if (typeof screenfull.onchange === "function") {
+    screenfull.onchange(updateStatus);
+  }
+}
+
 export const deviceActions = {
-  $markInitialized,
   initialize: () => async (dispatch, getState) => {
     if (isInitializedSelector(getState())) {
       return;
     }
 
-    dispatch(deviceActions.$initializeApiVersionObserver());
-    dispatch(deviceActions.$markInitialized());
+    dispatch($initializeApiVersionObserver());
+    dispatch($markInitialized());
 
     try {
       await getDeviceDetails();
@@ -71,13 +101,12 @@ export const deviceActions = {
       }
     }
 
-    dispatch(deviceActions.$startClock());
+    dispatch($startClock());
     dispatch(deviceActions.$fetchDeviceData());
-    dispatch(deviceActions.$initializeFullScreenSupport());
+    dispatch($initializeFullScreenSupport());
     dispatch(deviceActions.$initializeOfflineObserver());
   },
 
-  $updateDeviceData,
   $fetchDeviceData: () => async (dispatch, getState) => {
     const token = cancellationToken(deviceActions.$fetchDeviceData).cancelOthers();
 
@@ -93,7 +122,7 @@ export const deviceActions = {
         return;
       }
 
-      dispatch(deviceActions.$updateDeviceData(device));
+      dispatch($updateDeviceData(device));
       dispatch(deviceActions.$setIsSubscriptionCancelled(false));
       dispatch(deviceActions.setLanguage(device.language));
       dispatch(deviceActions.$removeCurrentMeetingIfNotCheckedIn());
@@ -135,20 +164,7 @@ export const deviceActions = {
   },
 
   $updateClock,
-  $startClock,
-
-  $updateFullScreenState,
-  $initializeFullScreenSupport: () => dispatch => {
-    const updateStatus = () => {
-      dispatch(deviceActions.$updateFullScreenState(screenfull.enabled, screenfull.isFullscreen));
-    };
-
-    updateStatus();
-
-    if (typeof screenfull.onchange === "function") {
-      screenfull.onchange(updateStatus);
-    }
-  },
+  
   toggleFullScreen: () => () => {
     if (screenfull.enabled) {
       screenfull.toggle();
@@ -158,12 +174,11 @@ export const deviceActions = {
   // TODO - find all usages of changeFontSize and rename it to $changeFontSize
   changeFontSize: $changeFontSize,
 
-  $updateOfflineStatus,
   $initializeOfflineObserver: () => (dispatch, getState) => {
     const successCallback = result => {
       if (isInOfflineModeSelector(getState())) {
         dispatch(meetingActions.endAction());
-        dispatch(deviceActions.$updateOfflineStatus(false));
+        dispatch($updateOfflineStatus(false));
       }
 
       return result;
@@ -171,7 +186,7 @@ export const deviceActions = {
 
     const errorCallback = error => {
       if (error.response === undefined && !isInOfflineModeSelector(getState())) {
-        dispatch(deviceActions.$updateOfflineStatus(true));
+        dispatch($updateOfflineStatus(true));
       }
 
       return Promise.reject(error);
@@ -180,24 +195,7 @@ export const deviceActions = {
     axios.interceptors.response.use(successCallback, errorCallback);
   },
 
-  $initializeApiVersionObserver: () => async () => {
-    let currentVersion = undefined;
-
-    const checkVersion = async () => {
-      const response = await api.getApiVersion();
-
-      if (response && response.version && currentVersion && currentVersion !== response.version) {
-        window.location.reload();
-      }
-
-      if (response) {
-        currentVersion = response.version;
-      }
-    };
-
-    setInterval(checkVersion, 1000 * 60 * 5);
-    await checkVersion();
-  },
+  
 
   $setIsSubscriptionCancelled,
   $markRemoved,
@@ -296,12 +294,12 @@ export const meetingActions = {
     try {
       await actionPromise;
 
-      dispatch(deviceActions.$updateDeviceData(await getDeviceDetails()));
+      dispatch($updateDeviceData(await getDeviceDetails()));
       dispatch(meetingActions.endAction());
     } catch (error) {
       console.error(error);
 
-      dispatch(deviceActions.$updateDeviceData(await getDeviceDetails()));
+      dispatch($updateDeviceData(await getDeviceDetails()));
       dispatch(meetingActions.$setActionError(error && error.response && error.response.status));
     }
   },
@@ -314,7 +312,7 @@ export const meetingActions = {
     try {
       await api.createMeeting(timeInMinutes, i18next.t("meeting.quick-meeting-title", { roomName }), calendarId);
 
-      dispatch(deviceActions.$updateDeviceData(await getDeviceDetails(true)));
+      dispatch($updateDeviceData(await getDeviceDetails(true)));
       dispatch(meetingActions.$setActionSuccess());
     } catch (error) {
       console.error(error);
