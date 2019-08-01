@@ -155,8 +155,9 @@ export const deviceActions = {
     dispatch(deviceActions.$fetchDeviceData());
   },
   $removeCurrentMeetingIfNotCheckedIn: () => async (dispatch, getState) => {
-    const minutesLeftForCheckIn = minutesLeftForCheckInSelector(getState());
-    const meeting = currentMeetingSelector(getState());
+    const state = getState();
+    const minutesLeftForCheckIn = minutesLeftForCheckInSelector(state);
+    const meeting = currentMeetingSelector(state);
 
     if (minutesLeftForCheckIn !== null && minutesLeftForCheckIn < 0) {
       await api.deleteMeeting(meeting.id, true);
@@ -221,12 +222,9 @@ export const deviceActions = {
 };
 
 export const meetingActions = {
-  $startAction,
   endAction,
-  $setActionError,
   $setActionSource,
   $setActionIsRetrying,
-  $setActionSuccess,
 
   retry: () => (dispatch, getState) => {
     dispatch(meetingActions.$setActionIsRetrying());
@@ -234,7 +232,7 @@ export const meetingActions = {
   },
 
   createMeeting: timeInMinutes => (dispatch, getState) => {
-    dispatch(meetingActions.$startAction(meetingActions.createMeeting(timeInMinutes)));
+    dispatch($startAction(meetingActions.createMeeting(timeInMinutes)));
 
     const roomName = calendarNameSelector(getState());
     const createMeetingPromise = api.createMeeting(
@@ -246,7 +244,7 @@ export const meetingActions = {
   },
 
   cancelMeeting: () => async (dispatch, getState) => {
-    dispatch(meetingActions.$startAction(meetingActions.cancelMeeting()));
+    dispatch($startAction(meetingActions.cancelMeeting()));
 
     const currentMeetingId = currentMeetingSelector(getState()).id;
     const deleteMeetingPromise = api.deleteMeeting(currentMeetingId, false);
@@ -255,25 +253,25 @@ export const meetingActions = {
   },
 
   endMeeting: () => dispatch => {
-    dispatch(meetingActions.$startAction(meetingActions.endMeeting()));
+    dispatch($startAction(meetingActions.endMeeting()));
 
     dispatch(meetingActions.$updateCurrentMeeting({ endNow: true }));
   },
 
   checkInToMeeting: () => dispatch => {
-    dispatch(meetingActions.$startAction(meetingActions.checkInToMeeting()));
+    dispatch($startAction(meetingActions.checkInToMeeting()));
 
     dispatch(meetingActions.$updateCurrentMeeting({ checkIn: true }));
   },
 
   extendMeeting: timeInMinutes => async dispatch => {
-    dispatch(meetingActions.$startAction(meetingActions.extendMeeting(timeInMinutes)));
+    dispatch($startAction(meetingActions.extendMeeting(timeInMinutes)));
 
     dispatch(meetingActions.$updateCurrentMeeting({ extensionTime: timeInMinutes }));
   },
 
   startMeetingEarly: () => async dispatch => {
-    dispatch(meetingActions.$startAction(meetingActions.startMeetingEarly()));
+    dispatch($startAction(meetingActions.startMeetingEarly()));
 
     dispatch(meetingActions.$updateCurrentMeeting({ checkIn: true, startNow: true }));
   },
@@ -295,12 +293,12 @@ export const meetingActions = {
       console.error(error);
 
       dispatch($updateDeviceData(await getDeviceDetails()));
-      dispatch(meetingActions.$setActionError(error && error.response && error.response.status));
+      dispatch($setActionError(error && error.response && error.response.status));
     }
   },
 
   createMeetingInAnotherRoom: (calendarId, timeInMinutes) => async (dispatch, getState) => {
-    dispatch(meetingActions.$startAction(meetingActions.createMeetingInAnotherRoom(calendarId, timeInMinutes)));
+    dispatch($startAction(meetingActions.createMeetingInAnotherRoom(calendarId, timeInMinutes)));
 
     const roomName = calendarNameSelector(getState(), { calendarId });
 
@@ -308,10 +306,10 @@ export const meetingActions = {
       await api.createMeeting(timeInMinutes, i18next.t("meeting.quick-meeting-title", { roomName }), calendarId);
 
       dispatch($updateDeviceData(await getDeviceDetails(true)));
-      dispatch(meetingActions.$setActionSuccess());
+      dispatch($setActionSuccess());
     } catch (error) {
       console.error(error);
-      dispatch(meetingActions.$setActionError());
+      dispatch($setActionError());
     }
   }
 };
