@@ -123,7 +123,7 @@ export const deviceActions = {
       }
 
       dispatch($updateDeviceData(device));
-      dispatch(deviceActions.$setIsSubscriptionCancelled(false));
+      dispatch($setIsSubscriptionCancelled(false));
       dispatch(deviceActions.setLanguage(device.language));
       dispatch(deviceActions.$removeCurrentMeetingIfNotCheckedIn());
     } catch (error) {
@@ -131,7 +131,7 @@ export const deviceActions = {
         dispatch($markRemoved());
       }
       if (error.response && error.response.status === 402) {
-        dispatch(deviceActions.$setIsSubscriptionCancelled(true));
+        dispatch($setIsSubscriptionCancelled(true));
       }
     }
 
@@ -194,10 +194,6 @@ export const deviceActions = {
 
     axios.interceptors.response.use(successCallback, errorCallback);
   },
-
-  
-
-  $setIsSubscriptionCancelled,
 
   disconnectDevice: () => async () => {
     await removeDevice();
