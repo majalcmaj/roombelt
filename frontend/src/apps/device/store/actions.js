@@ -128,7 +128,7 @@ export const deviceActions = {
       dispatch(deviceActions.$removeCurrentMeetingIfNotCheckedIn());
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        dispatch(deviceActions.$markRemoved());
+        dispatch($markRemoved());
       }
       if (error.response && error.response.status === 402) {
         dispatch(deviceActions.$setIsSubscriptionCancelled(true));
@@ -198,7 +198,7 @@ export const deviceActions = {
   
 
   $setIsSubscriptionCancelled,
-  $markRemoved,
+
   disconnectDevice: () => async () => {
     await removeDevice();
     window.location.reload();
