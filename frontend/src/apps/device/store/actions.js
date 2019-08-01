@@ -48,10 +48,7 @@ import {
   $allCalendarsViewActivity
 } from "./state/appState/appState.duck";
 
-import {
-  $updateFullScreenState,
-  $changeFontSize,
-} from './state/displayOptions/displayOptions.duck'
+import { $updateFullScreenState, $changeFontSize } from "./state/displayOptions/displayOptions.duck";
 
 const $initializeApiVersionObserver = () => async () => {
   let currentVersion = undefined;
@@ -70,7 +67,7 @@ const $initializeApiVersionObserver = () => async () => {
 
   setInterval(checkVersion, 1000 * 60 * 5);
   await checkVersion();
-}
+};
 
 const $initializeFullScreenSupport = () => dispatch => {
   const updateStatus = () => {
@@ -82,7 +79,7 @@ const $initializeFullScreenSupport = () => dispatch => {
   if (typeof screenfull.onchange === "function") {
     screenfull.onchange(updateStatus);
   }
-}
+};
 
 export const deviceActions = {
   initialize: () => async (dispatch, getState) => {
@@ -166,7 +163,7 @@ export const deviceActions = {
   },
 
   $updateClock,
-  
+
   toggleFullScreen: () => () => {
     if (screenfull.enabled) {
       screenfull.toggle();
@@ -235,7 +232,7 @@ const createMeetingInAnotherRoom = (calendarId, timeInMinutes) => async (dispatc
     console.error(error);
     dispatch($setActionError());
   }
-}
+};
 
 const $handleMeetingActionPromise = actionPromise => async dispatch => {
   try {
@@ -249,69 +246,74 @@ const $handleMeetingActionPromise = actionPromise => async dispatch => {
     dispatch($updateDeviceData(await getDeviceDetails()));
     dispatch($setActionError(error && error.response && error.response.status));
   }
+};
+
+const $updateCurrentMeeting = options => (dispatch, getState) => {
+  const currentMeetingId = currentMeetingSelector(getState()).id;
+  const updateMeetingPromise = api.updateMeeting(currentMeetingId, options);
+
+  dispatch($handleMeetingActionPromise(updateMeetingPromise));
+};
+
+const startMeetingEarly = () => async dispatch => {
+  dispatch($startAction(startMeetingEarly()));
+
+  dispatch($updateCurrentMeeting({ checkIn: true, startNow: true }));
+};
+
+const endMeeting = () => dispatch => {
+  dispatch($startAction(endMeeting()));
+
+  dispatch($updateCurrentMeeting({ endNow: true }));
+};
+
+const checkInToMeeting = () => dispatch => {
+  dispatch($startAction(checkInToMeeting()));
+
+  dispatch($updateCurrentMeeting({ checkIn: true }));
+};
+
+const extendMeeting = timeInMinutes => async dispatch => {
+  dispatch($startAction(extendMeeting(timeInMinutes)));
+
+  dispatch($updateCurrentMeeting({ extensionTime: timeInMinutes }));
+};
+
+const retry = () => (dispatch, getState) => {
+  dispatch($setActionIsRetrying());
+  dispatch(currentActionSelector(getState()));
+}
+
+const createMeeting = timeInMinutes => (dispatch, getState) => {
+  dispatch($startAction(createMeeting(timeInMinutes)));
+
+  const roomName = calendarNameSelector(getState());
+  const createMeetingPromise = api.createMeeting(
+    timeInMinutes,
+    i18next.t("meeting.quick-meeting-title", { roomName })
+  );
+
+  dispatch($handleMeetingActionPromise(createMeetingPromise));
+}
+
+const cancelMeeting = () => async (dispatch, getState) => {
+  dispatch($startAction(cancelMeeting()));
+
+  const currentMeetingId = currentMeetingSelector(getState()).id;
+  const deleteMeetingPromise = api.deleteMeeting(currentMeetingId, false);
+
+  dispatch($handleMeetingActionPromise(deleteMeetingPromise));
 }
 
 export const meetingActions = {
   endAction,
   $setActionSource,
-  $setActionIsRetrying,
-
-  retry: () => (dispatch, getState) => {
-    dispatch(meetingActions.$setActionIsRetrying());
-    dispatch(currentActionSelector(getState()));
-  },
-
-  createMeeting: timeInMinutes => (dispatch, getState) => {
-    dispatch($startAction(meetingActions.createMeeting(timeInMinutes)));
-
-    const roomName = calendarNameSelector(getState());
-    const createMeetingPromise = api.createMeeting(
-      timeInMinutes,
-      i18next.t("meeting.quick-meeting-title", { roomName })
-    );
-
-    dispatch($handleMeetingActionPromise(createMeetingPromise));
-  },
-
-  cancelMeeting: () => async (dispatch, getState) => {
-    dispatch($startAction(meetingActions.cancelMeeting()));
-
-    const currentMeetingId = currentMeetingSelector(getState()).id;
-    const deleteMeetingPromise = api.deleteMeeting(currentMeetingId, false);
-
-    dispatch($handleMeetingActionPromise(deleteMeetingPromise));
-  },
-
-  endMeeting: () => dispatch => {
-    dispatch($startAction(meetingActions.endMeeting()));
-
-    dispatch(meetingActions.$updateCurrentMeeting({ endNow: true }));
-  },
-
-  checkInToMeeting: () => dispatch => {
-    dispatch($startAction(meetingActions.checkInToMeeting()));
-
-    dispatch(meetingActions.$updateCurrentMeeting({ checkIn: true }));
-  },
-
-  extendMeeting: timeInMinutes => async dispatch => {
-    dispatch($startAction(meetingActions.extendMeeting(timeInMinutes)));
-
-    dispatch(meetingActions.$updateCurrentMeeting({ extensionTime: timeInMinutes }));
-  },
-
-  startMeetingEarly: () => async dispatch => {
-    dispatch($startAction(meetingActions.startMeetingEarly()));
-
-    dispatch(meetingActions.$updateCurrentMeeting({ checkIn: true, startNow: true }));
-  },
-
-  $updateCurrentMeeting: options => (dispatch, getState) => {
-    const currentMeetingId = currentMeetingSelector(getState()).id;
-    const updateMeetingPromise = api.updateMeeting(currentMeetingId, options);
-
-    dispatch($handleMeetingActionPromise(updateMeetingPromise));
-  },
-
+  retry,
+  createMeeting,
+  cancelMeeting,
+  endMeeting,
+  checkInToMeeting,
+  extendMeeting,
+  startMeetingEarly,
   createMeetingInAnotherRoom
 };
