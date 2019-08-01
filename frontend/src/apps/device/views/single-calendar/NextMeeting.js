@@ -5,8 +5,8 @@ import styled from "styled-components/macro";
 import DateRange from "react-icons/lib/md/date-range";
 
 import { Time } from "theme/index";
-import { nextMeetingSelector } from "../../store/selectors";
-import { isAmPmClockSelector } from "apps/device/store/selectors";
+import { nextMeetingSelector } from "../../selectors/selectors";
+import { isAmPmClockSelector } from "apps/device/selectors/selectors";
 import Section from "dark/Section";
 import colors from "dark/colors";
 import i18next from "i18next";

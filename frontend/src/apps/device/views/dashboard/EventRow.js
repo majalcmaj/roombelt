@@ -5,7 +5,7 @@ import { getMeetingSummary, prettyFormatMinutes, timeDifferenceInMinutes } from 
 import Status from "dark/Status";
 import RowView from "./RowView";
 import { Text, Time } from "theme";
-import { isAmPmClockSelector, timestampSelector } from "../../store/selectors";
+import { isAmPmClockSelector, timestampSelector } from "../../selectors/selectors";
 import { connect } from "react-redux";
 
 const t = (key, time) => i18next.t(key, { time: prettyFormatMinutes(time) });

@@ -11,7 +11,7 @@ import {
   isAmPmClockSelector,
   minutesAvailableTillNextMeetingSelector,
   nextMeetingSelector
-} from "apps/device/store/selectors";
+} from "apps/device/selectors/selectors";
 import { getMeetingSummary, prettyFormatMinutes } from "services/formatting";
 
 const Wrapper = styled.div`

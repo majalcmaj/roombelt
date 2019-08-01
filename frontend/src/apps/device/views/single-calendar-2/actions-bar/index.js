@@ -5,7 +5,7 @@ import {
   isActionErrorSelector,
   isReadOnlyDeviceSelector,
   isRetryingActionSelector
-} from "apps/device/store/selectors";
+} from "apps/device/selectors/selectors";
 
 import ActionError from "../../../components/ActionError";
 import RoomAvailable from "./RoomAvailable";

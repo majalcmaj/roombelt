@@ -3,8 +3,8 @@ import styled, { keyframes } from "styled-components/macro";
 import { connect } from "react-redux";
 import IoAndroidExpand from "react-icons/lib/io/android-expand";
 import IoAndroidContract from "react-icons/lib/io/android-contract";
-import { deviceActions } from "apps/device/store/actions";
-import { isCalendarSelectedSelector, isDashboardDeviceSelector } from "apps/device/store/selectors";
+import { deviceActions } from "apps/device/actions/actions";
+import { isCalendarSelectedSelector, isDashboardDeviceSelector } from "apps/device/selectors/selectors";
 
 const autoHide = keyframes`
   from { visibility: visible }

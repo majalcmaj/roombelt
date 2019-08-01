@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/macro";
-import { currentMeetingSelector, nextMeetingSelector, requireCheckInSelector } from "apps/device/store/selectors";
+import { currentMeetingSelector, nextMeetingSelector, requireCheckInSelector } from "apps/device/selectors/selectors";
 import { connect } from "react-redux";
 import Status from "dark/Status";
 import i18next from "i18next";

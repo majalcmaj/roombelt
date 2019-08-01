@@ -5,11 +5,11 @@ import {
   $setActionError,
   $setActionSuccess,
   endAction
-} from "./state/currentMeetingActions/currentMeetingActions.duck";
+} from "../state/currentMeetingActions/currentMeetingActions.duck";
 
-import { $updateDeviceData } from "./state/device/device.duck";
+import { $updateDeviceData } from "../state/device/device.duck";
 
-import { calendarNameSelector, currentActionSelector, currentMeetingSelector } from "./selectors";
+import { calendarNameSelector, currentActionSelector, currentMeetingSelector } from "../selectors/selectors";
 
 import * as api from "services/api";
 

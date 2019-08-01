@@ -13,10 +13,10 @@ import {
   isRetryingActionSelector,
   nextMeetingSelector,
   timestampSelector
-} from "apps/device/store/selectors";
+} from "apps/device/selectors/selectors";
 import { getMeetingSummary, prettyFormatMinutes, timeDifferenceInMinutes } from "services/formatting";
 import { Time } from "theme";
-import { deviceActions, meetingActions } from "apps/device/store/actions";
+import { deviceActions, meetingActions } from "apps/device/actions/actions";
 import ActionError from "../../components/ActionError";
 import Section, { partialMixin } from "dark/Section";
 import LoaderButton from "dark/LoaderButton";

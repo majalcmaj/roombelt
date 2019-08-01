@@ -4,8 +4,8 @@ import styled from "styled-components/macro";
 
 
 import { Time } from "theme/index";
-import { nextMeetingSelector } from "../../store/selectors";
-import { isAmPmClockSelector } from "apps/device/store/selectors";
+import { nextMeetingSelector } from "../../selectors/selectors";
+import { isAmPmClockSelector } from "apps/device/selectors/selectors";
 import colors from "dark/colors";
 import { getMeetingSummary } from "services/formatting";
 

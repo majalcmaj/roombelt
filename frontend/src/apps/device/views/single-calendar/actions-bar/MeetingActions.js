@@ -13,9 +13,9 @@ import {
   minutesAvailableTillNextMeetingSelector,
   minutesLeftForCheckInSelector,
   requireCheckInSelector
-} from "apps/device/store/selectors";
+} from "apps/device/selectors/selectors";
 
-import { meetingActions } from "apps/device/store/actions";
+import { meetingActions } from "apps/device/actions/actions";
 
 class MeetingStarted extends React.PureComponent {
   state = { idOfMeetingToCancel: null };

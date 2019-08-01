@@ -17,19 +17,19 @@ import {
   lastActivityOnShowCalendarsViewSelector,
   minutesLeftForCheckInSelector,
   showAllCalendarsViewSelector
-} from "./selectors";
+} from "../selectors/selectors";
 import { changeLanguage } from "i18n";
 
 import { wait, waitUntilTrue } from "utils/time";
 
-import { $updateClock } from "./state/timestamp/timestamp.duck";
-import { $startClock } from "./state/timestamp/timestamp.thunks";
+import { $updateClock } from "../state/timestamp/timestamp.duck";
+import { $startClock } from "../state/timestamp/timestamp.thunks";
 
-import { $updateDeviceData } from "./state/device/device.duck";
+import { $updateDeviceData } from "../state/device/device.duck";
 
 import {
   endAction
-} from "./state/currentMeetingActions/currentMeetingActions.duck";
+} from "../state/currentMeetingActions/currentMeetingActions.duck";
 
 import {
   $markInitialized,
@@ -38,9 +38,9 @@ import {
   $updateOfflineStatus,
   $updateShowAllCalendarsView,
   $allCalendarsViewActivity
-} from "./state/appState/appState.duck";
+} from "../state/appState/appState.duck";
 
-import { $updateFullScreenState, $changeFontSize } from "./state/displayOptions/displayOptions.duck";
+import { $updateFullScreenState, $changeFontSize } from "../state/displayOptions/displayOptions.duck";
 
 const $initializeApiVersionObserver = () => async () => {
   let currentVersion = undefined;

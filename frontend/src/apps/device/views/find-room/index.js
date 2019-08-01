@@ -2,14 +2,14 @@ import React from "react";
 import styled from "styled-components/macro";
 import { connect } from "react-redux";
 import i18next from "i18next";
-import { deviceActions } from "apps/device/store/actions";
+import { deviceActions } from "apps/device/actions/actions";
 import {
   allCalendarsSelector,
   areAllCalendarsLoadedSelector,
   fontSizeSelector,
   isAmPmClockSelector,
   timestampSelector
-} from "apps/device/store/selectors";
+} from "apps/device/selectors/selectors";
 
 import CalendarRow from "./CalendarRow";
 import { Loader } from "theme";

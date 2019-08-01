@@ -7,7 +7,7 @@ import {
   currentMeetingSelector,
   nextMeetingSelector,
   timestampSelector
-} from "apps/device/store/selectors";
+} from "apps/device/selectors/selectors";
 import { connect } from "react-redux";
 import { prettyFormatMinutes, timeDifferenceInMinutes } from "services/formatting";
 import * as i18next from "i18next";

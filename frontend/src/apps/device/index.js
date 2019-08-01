@@ -2,7 +2,7 @@ import React from "react";
 import { Provider } from "react-redux";
 
 import store from "./store";
-import { deviceActions } from "./store/actions";
+import { deviceActions } from "./actions/actions";
 import DisplayOptionsBar from "./components/DisplayOptionsBar";
 
 import { getDeviceDetails, setHeader } from "../../services/api";

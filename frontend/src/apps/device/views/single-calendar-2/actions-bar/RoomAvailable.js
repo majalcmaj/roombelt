@@ -4,8 +4,8 @@ import LoaderButton from "dark/LoaderButton";
 
 
 import { prettyFormatMinutes } from "services/formatting";
-import { currentActionSourceSelector, minutesAvailableTillNextMeetingSelector } from "apps/device/store/selectors";
-import { meetingActions } from "apps/device/store/actions";
+import { currentActionSourceSelector, minutesAvailableTillNextMeetingSelector } from "apps/device/selectors/selectors";
+import { meetingActions } from "apps/device/actions/actions";
 
 import Button, { Button2 } from './Button'
 

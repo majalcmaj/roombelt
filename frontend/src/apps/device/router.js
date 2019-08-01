@@ -9,7 +9,7 @@ import {
   isDeviceRemovedSelector,
   isSubscriptionCancelledSelector,
   showAllCalendarsViewSelector
-} from "./store/selectors";
+} from "./selectors/selectors";
 
 import Dashboard from "./views/dashboard";
 import SingleCalendar from "./views/single-calendar-2";
@@ -17,7 +17,7 @@ import AllCalendars from "./views/find-room";
 import ConnectionCode from "./views/connect/ConnectionCode";
 import NoCalendar from "./views/connect/NoCalendar";
 import FatalError from "theme/layouts/FatalError";
-import { deviceActions } from "apps/device/store/actions";
+import { deviceActions } from "apps/device/actions/actions";
 
 const Router = ({
   connectionCode,

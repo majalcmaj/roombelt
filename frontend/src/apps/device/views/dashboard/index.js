@@ -8,7 +8,7 @@ import {
   isAmPmClockSelector,
   showAvailableRoomsSelector,
   timestampSelector
-} from "apps/device/store/selectors";
+} from "apps/device/selectors/selectors";
 import EventRow from "./EventRow";
 import { PageLoaded } from "theme";
 
@@ -18,7 +18,7 @@ import colors from "dark/colors";
 import Time from "theme/components/Time";
 import RowView from "./RowView";
 import CalendarRow from "./CalendarRow";
-import { displayNameSelector, fontSizeSelector } from "../../store/selectors";
+import { displayNameSelector, fontSizeSelector } from "../../selectors/selectors";
 
 const Header = styled(Section).attrs({ header: true })`
   padding: 0.4rem 0.85rem 0.2rem 0.85rem;

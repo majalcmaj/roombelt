@@ -7,9 +7,9 @@ import {
   actionErrorStatusCodeSelector,
   isActionErrorSelector,
   isRetryingActionSelector
-} from "apps/device/store/selectors";
+} from "apps/device/selectors/selectors";
 
-import { meetingActions } from "apps/device/store/actions";
+import { meetingActions } from "apps/device/actions/actions";
 import LoaderButton from "dark/LoaderButton";
 import Button from "dark/Button";
 import colors from "dark/colors";

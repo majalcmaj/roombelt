@@ -9,10 +9,10 @@ import {
   nextMeetingSelector,
   getRoomStatus,
   timestampSelector
-} from "../../store/selectors";
+} from "../../selectors/selectors";
 
 import NextMeeting from "./NextMeeting";
-import { deviceActions } from "apps/device/store/actions";
+import { deviceActions } from "apps/device/actions/actions";
 import colors from "dark/colors";
 import Time from "theme/components/Time";
 import CurrentMeeting from "./CurrentMeeting";
