@@ -131,7 +131,7 @@ export const getRoomStatus = createSelector(
         label: i18next.t("availability.occupied-all-day")
       }
     }
-  
+
     if (currentMeeting.isCheckedIn) {
       return {
         status: 'occupied',
@@ -150,14 +150,14 @@ export const getRoomStatus = createSelector(
   
     if (fromStart === 0) {
       return {
-        status: 'occupied',
+        status: 'checkin',
         label: i18next.t("availability.starts.now", { count: -fromStart })
       }
     }
   
     if (requireCheckIn) {
       return {
-        status: 'occupied',
+        status: 'checkin',
         label: i18next.t("availability.starts.ago", { count: fromStart })
       }
     }
@@ -167,4 +167,4 @@ export const getRoomStatus = createSelector(
       label: i18next.t("availability.occupied")
     }
   }
-)
+);

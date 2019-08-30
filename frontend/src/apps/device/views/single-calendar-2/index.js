@@ -51,7 +51,8 @@ const Spacer = styled.div`
 const statusBg = {
   available: "linear-gradient(135deg, rgba(0,136,51,1) 0%, rgba(0,204,51,1) 100%);",
   occupied: "linear-gradient(135deg, rgba(192,0,0,1) 0%, rgba(224,0,0,1) 100%)",
-  warning: "linear-gradient(135deg, rgba(0,85,153,1) 0%, rgba(0,119,187,1) 100%);"
+  warning: "linear-gradient(135deg, rgba(0,85,153,1) 0%, rgba(0,119,187,1) 100%);",
+  checkin: "linear-gradient(135deg, #fe6800 0%, #fb3b00 100%);"
 };
 
 const CalendarView = ({
