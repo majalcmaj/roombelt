@@ -29,7 +29,7 @@ const CustomButton = styled(Button)`
     display: inline-block;
     width: auto;
   }
-`
+`;
 
 const Header = styled.div`
   display: flex;
