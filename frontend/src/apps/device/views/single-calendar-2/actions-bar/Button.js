@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 const Button = styled.button`
   background: white;
@@ -10,6 +10,7 @@ const Button = styled.button`
   font-size: 1.2rem;
   padding: 0.7rem 2rem;
   margin-right: 0.3rem;
+  min-height: 2.65em;
 
   @media (orientation: portrait) {
     display: block;
@@ -22,8 +23,9 @@ export const Button2 = styled(Button)`
   border: 2px solid white;
   background: transparent;
   color: white;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  min-height: 2.65em;
 `;
 
-export default Button
+export default Button;
