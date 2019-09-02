@@ -8,7 +8,7 @@ export default styled.div`
   display: inline-block;
   height: 2.5em;
   width: 2.5em;
-  color: ${props => (props.white ? "white" : "#467fcf")};
+  color: ${props => (props.color ? props.color : "white")};
   position: relative;
 
   &:before,

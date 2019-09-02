@@ -93,9 +93,16 @@ class MeetingStarted extends React.PureComponent {
   }
 
   renderExtendMeeting() {
-    const { minutesToNextMeeting, currentActionSource, extendMeeting, isAfterCurrentMeetingStartTime, cancelMeeting, endMeeting } = this.props;
+    const {
+      minutesToNextMeeting,
+      currentActionSource,
+      extendMeeting,
+      isAfterCurrentMeetingStartTime,
+      cancelMeeting,
+      endMeeting
+    } = this.props;
 
-    const ExtendButton = ({ value, name, label = '' }) => (
+    const ExtendButton = ({ value, name, label = "" }) => (
       <>
         <LoaderButton
           key={name}
@@ -105,28 +112,32 @@ class MeetingStarted extends React.PureComponent {
           isLoading={currentActionSource === name}
           onClick={() => extendMeeting(value, name)}
         >
-          {label}{prettyFormatMinutes(value)}
+          {label}
+          {prettyFormatMinutes(value)}
         </LoaderButton>{" "}
       </>
     );
 
     const showCustomExtensionTime = minutesToNextMeeting > 0 && minutesToNextMeeting <= 70;
 
-    const onEnd= () => (isAfterCurrentMeetingStartTime ? endMeeting("end-meeting") : cancelMeeting("end-meeting"));
+    const onEnd = () => (isAfterCurrentMeetingStartTime ? endMeeting("end-meeting") : cancelMeeting("end-meeting"));
 
     return (
       <>
-        <Button
+        <LoaderButton
           error
-          key={"end-now"}
+          as={Button}
+          key="end-now"
+          color="black"
           disabled={currentActionSource !== null}
+          isLoading={currentActionSource === "end-meeting"}
           onClick={onEnd}
         >
           End meeting
-        </Button>{" "}
+        </LoaderButton>{" "}
         {minutesToNextMeeting > 0 && (
           <>
-            {minutesToNextMeeting > 20 && <ExtendButton value={15} name="extend-15" label="+ "/>}
+            {minutesToNextMeeting > 20 && <ExtendButton value={15} name="extend-15" label="+ " />}
             {showCustomExtensionTime && <ExtendButton value={minutesToNextMeeting} name="extend-custom" />}
           </>
         )}

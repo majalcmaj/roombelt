@@ -19,7 +19,7 @@ const getStatusMessage = (meeting, timestamp, isAmPmClock) => {
   if (minutesToStart > 15) {
     return (
       <>
-        {i18next.t("dashboard.starts-at")} <Time timestamp={meeting.startTimestamp} ampm={isAmPmClock}/>
+        {i18next.t("dashboard.starts-at")} <Time timestamp={meeting.startTimestamp} ampm={isAmPmClock} />
       </>
     );
   }
@@ -35,9 +35,12 @@ const EventRow = ({ meeting, timestamp, isAmPmClock }) => {
   const meetingSummary = (
     <>
       {getMeetingSummary(meeting)}
-      {meeting && !meeting.isCreatedFromDevice && <Text muted xsmall block>
-        {i18next.t("dashboard.hosted-by")} {meeting.organizer.displayName}
-      </Text>}
+      {meeting &&
+        !meeting.isCreatedFromDevice && (
+          <Text muted xsmall block>
+            {i18next.t("dashboard.hosted-by")} {meeting.organizer.displayName}
+          </Text>
+        )}
     </>
   );
 
@@ -50,7 +53,7 @@ const EventRow = ({ meeting, timestamp, isAmPmClock }) => {
     </Status>
   );
 
-  return <RowView meetingRoom={meeting.calendar.name} meetingStatus={meetingStatus} meetingSummary={meetingSummary}/>;
+  return <RowView meetingRoom={meeting.calendar.name} meetingStatus={meetingStatus} meetingSummary={meetingSummary} />;
 };
 
 const mapStateToProps = state => ({

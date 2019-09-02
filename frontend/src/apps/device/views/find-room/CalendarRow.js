@@ -29,7 +29,7 @@ const CustomButton = styled(Button)`
     display: inline-block;
     width: auto;
   }
-`
+`;
 
 const Header = styled.div`
   display: flex;
@@ -148,6 +148,7 @@ const CalendarRow = ({
   const CreateButton = ({ value, name }) => (
     <LoaderButton
       as={CustomButton}
+      color="black"
       disabled={currentActionSource !== null}
       isLoading={currentActionSource === name}
       onClick={() => createMeeting(calendarId, value, name)}

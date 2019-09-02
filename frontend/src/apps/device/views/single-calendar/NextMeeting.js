@@ -20,7 +20,7 @@ const Wrapper = styled(Section).attrs({ footer: true })`
 `;
 
 const NextLabel = styled.div`
-   font-size: 1.5em;
+  font-size: 1.5em;
 `;
 
 const NextMeetingSummary = styled.div`
@@ -43,22 +43,23 @@ const Spacer = styled.div`
   flex-grow: 1;
 `;
 
-
-const NextMeeting = ({ nextMeeting, isAmPmClock }) =>
+const NextMeeting = ({ nextMeeting, isAmPmClock }) => (
   <Wrapper>
     <NextLabel>{i18next.t("meeting.next")}</NextLabel>
-    <Spacer/>
-    <NextMeetingSummary>{getMeetingSummary(nextMeeting)}</NextMeetingSummary>
-    {" "}
+    <Spacer />
+    <NextMeetingSummary>{getMeetingSummary(nextMeeting)}</NextMeetingSummary>{" "}
     <NextMeetingTime>
-      {!nextMeeting.isAllDayEvent && <>
-        <Time timestamp={nextMeeting.startTimestamp} ampm={isAmPmClock}/>
-        {" - "}
-        <Time timestamp={nextMeeting.endTimestamp} ampm={isAmPmClock}/>
-      </>}
+      {!nextMeeting.isAllDayEvent && (
+        <>
+          <Time timestamp={nextMeeting.startTimestamp} ampm={isAmPmClock} />
+          {" - "}
+          <Time timestamp={nextMeeting.endTimestamp} ampm={isAmPmClock} />
+        </>
+      )}
     </NextMeetingTime>
-    <DateRange style={{ transform: "translateY(0.1rem)" }}/>
-  </Wrapper>;
+    <DateRange style={{ transform: "translateY(0.1rem)" }} />
+  </Wrapper>
+);
 
 const mapStateToProps = state => ({
   nextMeeting: nextMeetingSelector(state),

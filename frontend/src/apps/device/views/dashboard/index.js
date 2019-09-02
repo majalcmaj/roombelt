@@ -45,11 +45,11 @@ const Dashboard = ({ timestamp, isAmPmClock, displayName, events, calendars, sho
 
   return (
     <Layout style={{ overflow: "hidden" }} fontSize={fontSize}>
-      <PageLoaded/>
+      <PageLoaded />
       <Header>
         <span>{displayName || i18next.t("dashboard.page-title")}</span>
         <span>
-          <Time timestamp={timestamp} ampm={isAmPmClock} smallSuffix blinking/>
+          <Time timestamp={timestamp} ampm={isAmPmClock} smallSuffix blinking />
         </span>
       </Header>
       {hasAnyRows && (
@@ -63,8 +63,8 @@ const Dashboard = ({ timestamp, isAmPmClock, displayName, events, calendars, sho
       )}
 
       <div>
-        {showAvailableRooms && calendars.map((calendar, index) => <CalendarRow key={index} calendarId={calendar.id}/>)}
-        {events.map((event, index) => <EventRow key={index} meeting={event}/>)}
+        {showAvailableRooms && calendars.map((calendar, index) => <CalendarRow key={index} calendarId={calendar.id} />)}
+        {events.map((event, index) => <EventRow key={index} meeting={event} />)}
         {!hasAnyRows && <NoMeetingsInfo>{i18next.t("dashboard.no-meetings")}</NoMeetingsInfo>}
       </div>
     </Layout>

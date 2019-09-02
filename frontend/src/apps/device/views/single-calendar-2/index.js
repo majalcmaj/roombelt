@@ -38,6 +38,7 @@ const Button = styled.button`
   margin: 0;
   font-weight: 500;
   border-radius: 0.3rem;
+  border: none;
 `;
 
 const ActionsWrapper = styled.div`
@@ -84,7 +85,11 @@ const CalendarView = ({
       <Spacer />
 
       {nextMeeting && <NextMeeting />}
-      <div style={{ color: 'white', fontSize: '50%', position: 'absolute', bottom: '0.6rem', right: '1rem', opacity: 0.5 }}>v{process.env.REACT_APP_VERSION}</div>
+      <div
+        style={{ color: "white", fontSize: "50%", position: "absolute", bottom: "0.6rem", right: "1rem", opacity: 0.5 }}
+      >
+        v{process.env.REACT_APP_VERSION}
+      </div>
     </Layout>
   );
 };

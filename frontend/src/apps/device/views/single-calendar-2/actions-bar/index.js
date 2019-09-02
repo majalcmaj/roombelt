@@ -13,10 +13,10 @@ import MeetingActions from "./MeetingActions";
 
 const ActionsBar = ({ isReadOnlyDevice, isActionError, isRetryingAction, currentMeeting }) => {
   if (isReadOnlyDevice) return null;
-  if (isActionError || isRetryingAction) return <ActionError/>;
-  if (!currentMeeting) return <RoomAvailable/>;
+  if (isActionError || isRetryingAction) return <ActionError />;
+  if (!currentMeeting) return <RoomAvailable />;
 
-  return !currentMeeting.isAllDayEvent && <MeetingActions/>;
+  return !currentMeeting.isAllDayEvent && <MeetingActions />;
 };
 
 const mapStateToProps = state => ({

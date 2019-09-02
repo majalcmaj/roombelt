@@ -10,7 +10,6 @@ export const deviceSelector = state => state.device.data;
 export const isInOfflineModeSelector = state => state.appState.isOffline;
 export const showAllCalendarsViewSelector = state => state.appState.showAllCalendarsView;
 export const lastActivityOnShowCalendarsViewSelector = state => state.appState.lastActivityOnShowCalendarsView;
-export const connectionCodeSelector = state => state.device && state.device.connectionCode;
 export const currentActionSelector = state => state.currentMeetingActions.currentAction;
 export const currentActionSourceSelector = state => state.currentMeetingActions.source;
 export const isActionErrorSelector = state => state.currentMeetingActions.isError;
@@ -28,10 +27,14 @@ export const calendarSelector = (state, props) => {
   return device && device.allCalendars.find(calendar => calendar.id === props.calendarId);
 };
 
+export const connectionCodeSelector = createSelector(deviceSelector, device => device && device.connectionCode);
 export const isDeviceConnectedSelector = createSelector(deviceSelector, device => device && !device.connectionCode);
-export const isDashboardDeviceSelector = createSelector(deviceSelector, device => device && device.deviceType === "dashboard");
+export const isDashboardDeviceSelector = createSelector(
+  deviceSelector,
+  device => device && device.deviceType === "dashboard"
+);
 export const isCalendarSelectedSelector = createSelector(deviceSelector, device => device && !!device.calendar);
-export const isAmPmClockSelector = createSelector(deviceSelector, device => device ? device.clockType === 12 : true);
+export const isAmPmClockSelector = createSelector(deviceSelector, device => (device ? device.clockType === 12 : true));
 export const showAvailableRoomsSelector = createSelector(deviceSelector, device => device && device.showAvailableRooms);
 export const isReadOnlyDeviceSelector = createSelector(deviceSelector, device => device && device.isReadOnlyDevice);
 
@@ -41,13 +44,22 @@ export const areAllCalendarsLoadedSelector = createSelector(deviceSelector, devi
 
 export const requireCheckInSelector = createSelector(deviceSelector, device => device && device.minutesForCheckIn > 0);
 export const minutesForCheckInSelector = createSelector(deviceSelector, device => device && device.minutesForCheckIn);
-export const minutesForStartEarlySelector = createSelector(deviceSelector, device => device && device.minutesForStartEarly);
+export const minutesForStartEarlySelector = createSelector(
+  deviceSelector,
+  device => device && device.minutesForStartEarly
+);
 export const calendarNameSelector = createSelector(calendarSelector, calendar => calendar && calendar.name);
 
-export const currentMeetingSelector = createSelector([calendarSelector, timestampSelector, minutesForStartEarlySelector],
-  (calendar, currentTimestamp, minutesForStartEarly) => calendar && calendar.events.find(
-    event => event.startTimestamp < currentTimestamp + minutesForStartEarly * 60 * 1000 && event.endTimestamp > currentTimestamp
-  ));
+export const currentMeetingSelector = createSelector(
+  [calendarSelector, timestampSelector, minutesForStartEarlySelector],
+  (calendar, currentTimestamp, minutesForStartEarly) =>
+    calendar &&
+    calendar.events.find(
+      event =>
+        event.startTimestamp < currentTimestamp + minutesForStartEarly * 60 * 1000 &&
+        event.endTimestamp > currentTimestamp
+    )
+);
 
 export const nextMeetingSelector = createSelector(
   [calendarSelector, timestampSelector, currentMeetingSelector],
@@ -63,10 +75,12 @@ export const nextMeetingSelector = createSelector(
 export const minutesAvailableTillNextMeetingSelector = createSelector(
   [timestampSelector, currentMeetingSelector, nextMeetingSelector],
   (currentTimestamp, currentMeeting, nextMeeting) => {
-    return Math.ceil(timeDifferenceInMinutes(
-      nextMeeting && nextMeeting.startTimestamp,
-      currentMeeting ? currentMeeting.endTimestamp : currentTimestamp
-    ));
+    return Math.ceil(
+      timeDifferenceInMinutes(
+        nextMeeting && nextMeeting.startTimestamp,
+        currentMeeting ? currentMeeting.endTimestamp : currentTimestamp
+      )
+    );
   }
 );
 
@@ -97,7 +111,6 @@ export const minutesLeftForCheckInSelector = createSelector(
       return null;
     }
 
-
     // Don't automatically remove very long meetings (e.g. all day events)
     const meetingDurationInMinutes = (meeting.endTimestamp - meeting.startTimestamp) / 1000 / 60;
     if (meetingDurationInMinutes >= 240) {
@@ -120,51 +133,51 @@ export const getRoomStatus = createSelector(
   (currentTimestamp, currentMeeting, requireCheckIn) => {
     if (!currentMeeting) {
       return {
-        status: 'available',
+        status: "available",
         label: i18next.t("availability.available")
-      }
+      };
     }
-  
+
     if (currentMeeting.isAllDayEvent) {
       return {
-        status: 'occupied',
+        status: "occupied",
         label: i18next.t("availability.occupied-all-day")
-      }
+      };
     }
-  
+
     if (currentMeeting.isCheckedIn) {
       return {
-        status: 'occupied',
+        status: "occupied",
         label: i18next.t("availability.occupied")
-      }
+      };
     }
-  
+
     const fromStart = Math.floor((currentTimestamp - currentMeeting.startTimestamp) / 1000 / 60);
-  
+
     if (fromStart < 0) {
       return {
-        status: 'warning',
+        status: "warning",
         label: i18next.t("availability.starts.in", { count: -fromStart })
-      }
+      };
     }
-  
+
     if (fromStart === 0) {
       return {
-        status: 'occupied',
+        status: "occupied",
         label: i18next.t("availability.starts.now", { count: -fromStart })
-      }
+      };
     }
-  
+
     if (requireCheckIn) {
       return {
-        status: 'occupied',
+        status: "occupied",
         label: i18next.t("availability.starts.ago", { count: fromStart })
-      }
+      };
     }
 
     return {
-      status: 'occupied',
+      status: "occupied",
       label: i18next.t("availability.occupied")
-    }
+    };
   }
-)
+);

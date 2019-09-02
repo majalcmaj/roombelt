@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
 
-
 import { Time } from "theme/index";
 import { nextMeetingSelector } from "../../selectors/selectors";
 import { isAmPmClockSelector } from "apps/device/selectors/selectors";
@@ -37,8 +36,7 @@ const NextMeetingTime = styled.span`
 
 const NextMeeting = ({ nextMeeting, isAmPmClock }) => (
   <Wrapper>
-    <NextLabel>Upcoming: </NextLabel>
-    {' '}
+    <NextLabel>Upcoming: </NextLabel>{" "}
     <NextMeetingTime>
       {!nextMeeting.isAllDayEvent && (
         <>

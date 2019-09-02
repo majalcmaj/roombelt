@@ -27,9 +27,7 @@ import { $startClock } from "../state/timestamp/timestamp.thunks";
 
 import { $updateDeviceData } from "../state/device/device.duck";
 
-import {
-  endAction
-} from "../state/currentMeetingActions/currentMeetingActions.duck";
+import { endAction } from "../state/currentMeetingActions/currentMeetingActions.duck";
 
 import {
   $markInitialized,
