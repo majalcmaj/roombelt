@@ -6,9 +6,8 @@ import { deviceActions } from "apps/device/actions/actions";
 import {
   allCalendarsSelector,
   areAllCalendarsLoadedSelector,
-  fontSizeSelector,
-  isAmPmClockSelector,
-  timestampSelector
+  currentActionSourceSelector,
+  fontSizeSelector
 } from "apps/device/selectors/selectors";
 
 import CalendarRow from "./CalendarRow";
@@ -64,9 +63,8 @@ const AllCalendarsView = ({
   calendars,
   areAllCalendarsLoaded,
   markUserActivity,
-  timestamp,
-  isAmPmClock,
-  fontSize
+  fontSize,
+  currentActionSource
 }) => {
   return (
     <Layout style={{ minHeight: "100%", height: "auto" }} flexbox fontSize={fontSize}>
@@ -83,22 +81,22 @@ const AllCalendarsView = ({
         )}
         {calendars
           .slice()
-          .sort(sortCalendars)
+          .sort(getCalendarsComparator(currentActionSource))
           .map(calendar => <CalendarRow key={calendar.id} calendarId={calendar.id} />)}
       </Content>
     </Layout>
   );
 };
 
-const sortCalendars = (calendar1, calendar2) => {
+const getCalendarsComparator = currentActionSource => (calendar1, calendar2) => {
   const now = Date.now();
 
   const event1 = calendar1.events[0];
   const event2 = calendar2.events[0];
 
-  if (!event1) {
+  if (!event1 || calendarIsActionSource(calendar1, currentActionSource)) {
     return -1;
-  } else if (!event2) {
+  } else if (!event2 || calendarIsActionSource(calendar2, currentActionSource)) {
     return 1;
   }
 
@@ -111,12 +109,13 @@ const sortCalendars = (calendar1, calendar2) => {
   } else return event2.startTimestamp - event1.startTimestamp;
 };
 
+const calendarIsActionSource = (calendar, actionSource) => actionSource && actionSource.startsWith(calendar.id);
+
 const mapStateToProps = state => ({
   areAllCalendarsLoaded: areAllCalendarsLoadedSelector(state),
   calendars: allCalendarsSelector(state),
-  timestamp: timestampSelector(state),
-  isAmPmClock: isAmPmClockSelector(state),
-  fontSize: fontSizeSelector(state)
+  fontSize: fontSizeSelector(state),
+  currentActionSource: currentActionSourceSelector(state)
 });
 
 const mapDispatchToProps = dispatch => ({
