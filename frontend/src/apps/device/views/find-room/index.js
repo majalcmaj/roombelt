@@ -26,6 +26,9 @@ const Header = styled(Section).attrs({ header: true })`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: fixed;
+  width: 100%;
+  z-index: 2;
 `;
 
 const BackButton = styled(Button)`
@@ -46,6 +49,7 @@ const PageTitle = styled.span`
 const Content = styled.div`
   flex-grow: 1;
   overflow-y: auto;
+  padding-top: 3.54rem;
 `;
 
 const LoaderWrapper = styled.div`
