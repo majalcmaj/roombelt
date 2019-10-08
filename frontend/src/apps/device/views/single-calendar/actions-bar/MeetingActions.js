@@ -14,8 +14,9 @@ import {
   minutesLeftForCheckInSelector,
   requireCheckInSelector
 } from "apps/device/selectors/selectors";
-
 import { meetingActions } from "apps/device/actions/actions";
+
+import warningIcon from "../../../../../theme/images/warning-icon.svg";
 
 class MeetingStarted extends React.PureComponent {
   state = { idOfMeetingToCancel: null };
@@ -77,9 +78,12 @@ class MeetingStarted extends React.PureComponent {
         </Button>
 
         {minutesLeftForCheckIn > 0 && (
-          <div style={{ color: colors.foreground.gray, marginTop: ".5rem", fontSize: "0.8rem" }}>
-            {i18next.t("actions.check-in-warning", { count: Math.ceil(minutesLeftForCheckIn) })}
-          </div>
+            <>
+            <img src={warningIcon} style={{height: ".8rem", "padding-right": ".5rem"}} alt="warning"/>
+            <div style={{ color: colors.foreground.white, marginTop: ".5rem", fontSize: "0.8rem" }}>
+              {i18next.t("actions.check-in-warning", { count: Math.ceil(minutesLeftForCheckIn) })}
+            </div>
+            </>
         )}
       </>
     );
