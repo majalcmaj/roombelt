@@ -1,8 +1,8 @@
 import React from "react";
 import i18next from "i18next";
 import { connect } from "react-redux";
-
 import LoaderButton from "dark/LoaderButton";
+
 import colors from "dark/colors";
 import { prettyFormatMinutes } from "services/formatting";
 import {
@@ -13,10 +13,11 @@ import {
   minutesLeftForCheckInSelector,
   requireCheckInSelector
 } from "apps/device/selectors/selectors";
-
 import { meetingActions } from "apps/device/actions/actions";
 
 import Button, { Button2 } from "./Button";
+
+import warningIcon from "../../../../../theme/images/warning-icon.svg";
 
 class MeetingStarted extends React.PureComponent {
   state = { idOfMeetingToCancel: null };
@@ -84,7 +85,8 @@ class MeetingStarted extends React.PureComponent {
         </Button2>
 
         {minutesLeftForCheckIn > 0 && (
-          <div style={{ color: colors.foreground.gray, marginTop: ".5rem", fontSize: "0.8rem" }}>
+          <div style={{ color: colors.foreground.white, marginTop: ".5rem", fontSize: "0.8rem" }}>
+            <img src={warningIcon} style={{height: ".8rem", "padding-right": ".5rem", position: "relative", top: ".1rem"}} alt="warning"/>
             {i18next.t("actions.check-in-warning", { count: Math.ceil(minutesLeftForCheckIn) })}
           </div>
         )}
